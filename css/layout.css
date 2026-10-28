@@ -1,0 +1,101 @@
+/* হেডার, মোবাইল মেনু, ফুটার, ভাসমান WhatsApp বাটন, ছোট বার্তা */
+html { scroll-padding-top: 76px; }
+
+.skip-link {
+  position: absolute; left: 1rem; top: -4rem; z-index: 100;
+  background: var(--paper); color: var(--ink); padding: 0.6rem 1rem; border-radius: var(--r-sm);
+  font-weight: 600; text-decoration: none;
+}
+.skip-link:focus { top: 1rem; }
+
+/* হেডার */
+/* sticky হতে হলে বাইরের #site-header-কেই আটকাতে হয় */
+#site-header { position: sticky; top: 0; z-index: 50; }
+.site-header {
+  background: rgba(7, 9, 13, 0.88);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.bar { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); min-height: 64px; }
+.brand { font: 700 1.35rem var(--font-display); text-decoration: none; margin: 0; }
+.brand { display: inline-flex; align-items: center; }
+.brand-logo { display: block; width: auto; height: 38px; max-width: 100%; }
+.footer-logo { height: 44px; }
+.nav { display: none; gap: var(--space-3); margin-left: auto; margin-right: var(--space-2); }
+.nav-link { white-space: nowrap; color: var(--muted); text-decoration: none; font-weight: 500; padding: 0.5rem 0.25rem; }
+.nav-link:hover { color: var(--text); }
+.nav-cta { display: none; min-height: 42px; }
+
+.cart-link {
+  position: relative; width: 46px; height: 46px; border: 1px solid var(--line); border-radius: 50%;
+  display: grid; place-items: center; color: var(--text); text-decoration: none; flex: none;
+}
+.cart-link:hover { border-color: var(--blue-soft); }
+.cart-link svg { width: 22px; height: 22px; }
+.cart-count {
+  position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px;
+  border-radius: 999px; background: var(--blue); color: #fff;
+  font: 600 0.72rem/20px var(--font-body); text-align: center;
+}
+.cart-count[hidden] { display: none; }
+.nav-cta + .cart-link { margin-left: 0; }
+@media (max-width: 959px) { .bar > .cart-link { margin-left: auto; } }
+
+.burger {
+  width: 46px; height: 46px; border: 1px solid var(--line); border-radius: 50%;
+  background: transparent; cursor: pointer; display: grid; place-content: center; gap: 5px;
+}
+.burger span { display: block; width: 20px; height: 2px; background: var(--text); border-radius: 2px; transition: transform 0.25s var(--ease), opacity 0.2s; }
+.burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; }
+.burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: flex; flex-direction: column; gap: 0.25rem;
+  padding: var(--space-2) 1rem var(--space-3);
+  background: var(--ink); border-bottom: 1px solid var(--line);
+}
+.mobile-menu[hidden] { display: none; }
+.mobile-link { padding: 0.9rem 0.25rem; font: 600 var(--fs-lg) var(--font-display); text-decoration: none; border-bottom: 1px solid var(--line); }
+.mobile-cta { margin-top: var(--space-2); }
+body.menu-open { overflow: hidden; }
+
+@media (min-width: 960px) {
+  .nav { display: flex; }
+  .nav-cta { display: inline-flex; }
+  .burger, .mobile-menu { display: none !important; }
+}
+
+/* ফুটার */
+.site-footer { margin-top: var(--space-5); border-top: 1px solid var(--line); background: var(--panel); padding-top: var(--space-4); }
+.footer-grid { display: grid; gap: var(--space-4); grid-template-columns: 1fr; }
+@media (min-width: 700px) { .footer-grid { grid-template-columns: 2fr 1fr 1.4fr; } }
+.footer-brand { font-size: 1.5rem; }
+.footer-h { font: 600 var(--fs-md) var(--font-display); margin-bottom: var(--space-1); }
+.footer-col { display: flex; flex-direction: column; gap: 0.35rem; align-items: flex-start; }
+.footer-link { color: var(--muted); text-decoration: none; padding: 0.3rem 0; }
+.footer-link:hover { color: var(--text); text-decoration: underline; }
+.footer-legal { padding-block: var(--space-3); margin-top: var(--space-3); border-top: 1px solid var(--line); font-size: var(--fs-xs); }
+
+/* ভাসমান WhatsApp বাটন */
+.wa-float {
+  position: fixed; right: 1rem; bottom: 1rem; z-index: 60;
+  width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer;
+  background: #25d366; color: #07210f;
+  display: grid; place-items: center;
+  box-shadow: 0 10px 28px rgba(37, 211, 102, 0.35), 0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s var(--ease);
+}
+.wa-float:hover { transform: scale(1.06); }
+.wa-float svg { width: 30px; height: 30px; }
+
+/* ছোট বার্তা */
+.toast {
+  position: fixed; left: 50%; bottom: 5.5rem; z-index: 70;
+  transform: translate(-50%, 12px); opacity: 0; pointer-events: none;
+  max-width: min(92vw, 420px); padding: 0.8rem 1.1rem;
+  background: var(--paper); color: var(--ink); border-radius: var(--r-md);
+  font-size: var(--fs-sm); font-weight: 500; text-align: center;
+  transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+}
+.toast.show { opacity: 1; transform: translate(-50%, 0); }

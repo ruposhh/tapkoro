@@ -1,0 +1,35 @@
+/* পণ্যের তালিকার টুলবার, ফিল্টার চিপ, খালি অবস্থা */
+.toolbar { display: grid; gap: var(--space-2); margin-bottom: var(--space-2); }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip {
+  min-height: 42px; padding: 0 1.1rem; border-radius: 999px;
+  background: transparent; color: var(--muted); border: 1px solid var(--line);
+  font: 500 var(--fs-sm) var(--font-body); cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+.chip:hover { color: var(--text); border-color: var(--blue-soft); }
+.chip[aria-pressed="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+
+.field { display: flex; }
+.input {
+  width: 100%; min-height: 46px; padding: 0 1rem;
+  background: var(--panel); color: var(--text);
+  border: 1px solid var(--line); border-radius: var(--r-md);
+  font: var(--fs-sm) var(--font-body);
+}
+.input::placeholder { color: var(--muted); }
+.input:hover { border-color: rgba(255, 255, 255, 0.2); }
+select.input { cursor: pointer; }
+
+@media (min-width: 700px) {
+  .toolbar { grid-template-columns: 1fr minmax(180px, 240px) minmax(190px, 220px); align-items: center; }
+  .chips { grid-column: 1 / -1; }
+}
+
+.catalog-status { font-size: var(--fs-sm); margin-bottom: var(--space-2); }
+
+.empty { text-align: center; padding: var(--space-4) var(--space-2); border: 1px dashed var(--line); border-radius: var(--r-lg); }
+.empty[hidden] { display: none; }
+
+.card-note { font-size: var(--fs-xs); color: var(--muted); }
+.card-btn { width: 100%; margin-top: var(--space-1); }

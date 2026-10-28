@@ -1,0 +1,111 @@
+/* পণ্যের ডিটেইল, কার্ট ও চেকআউট পেজের স্টাইল */
+.page-h { font-size: var(--fs-xl); margin-bottom: var(--space-3); }
+.crumb { font-size: var(--fs-sm); margin-bottom: var(--space-2); }
+.crumb a { color: var(--muted); text-decoration: none; }
+.crumb a:hover { color: var(--text); }
+.card-media { display: block; }
+.card-title { text-decoration: none; }
+.card-title:hover { text-decoration: underline; }
+.card-more { display: inline-block; margin-top: 0.25rem; color: var(--muted); font-size: var(--fs-sm); padding: 0.4rem 0; }
+.card-more:hover { color: var(--text); }
+.link-btn { background: none; border: 0; color: var(--blue-soft); font: 500 var(--fs-sm) var(--font-body); cursor: pointer; padding: 0.5rem 0; text-decoration: underline; }
+.link-btn:hover { color: var(--text); }
+
+/* ডিটেইল */
+.detail-grid { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
+.detail-grid > *, .cart-layout > * { min-width: 0; }
+@media (min-width: 860px) { .detail-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; } .gallery { position: sticky; top: 88px; } }
+.gallery-main { aspect-ratio: 4 / 5; background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+.gallery-main img, .gallery-main .ph { width: 100%; height: 100%; object-fit: contain; }
+.gallery-thumbs { display: flex; gap: 0.5rem; margin-top: 0.75rem; overflow-x: auto; padding-bottom: 0.25rem; }
+.thumb { flex: none; width: 64px; height: 80px; padding: 0; border: 2px solid var(--line); border-radius: var(--r-sm); background: var(--panel-2); overflow: hidden; cursor: pointer; }
+.thumb img { width: 100%; height: 100%; object-fit: cover; }
+.thumb[aria-pressed="true"] { border-color: var(--blue-soft); }
+.detail-badges { display: flex; gap: 0.4rem; min-height: 1.5rem; margin-bottom: 0.5rem; }
+.detail-title { font-size: var(--fs-xl); }
+.detail-info .price { margin-top: 0; padding-top: 0; margin-bottom: var(--space-2); }
+.detail-desc { color: var(--muted); }
+.detail-block { margin-top: var(--space-3); padding-top: var(--space-2); border-top: 1px solid var(--line); }
+.detail-h { font-size: var(--fs-md); margin-bottom: 0.5rem; }
+.tick-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.tick-list li { padding-left: 1.5rem; position: relative; color: var(--muted); }
+.tick-list li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 0.8rem; height: 0.4rem; border-left: 2px solid var(--good); border-bottom: 2px solid var(--good); transform: rotate(-45deg) translateY(-30%); }
+.detail-ask { display: inline-block; margin-top: var(--space-2); color: var(--muted); font-size: var(--fs-sm); }
+.related { padding-bottom: 0; }
+
+/* অপশন বাছা */
+.option-set { border: 0; padding: 0; margin: 0 0 var(--space-2); min-width: 0; }
+.option-set legend { font-weight: 600; margin-bottom: 0.5rem; padding: 0; }
+.option-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.option-chip { position: relative; }
+.option-chip input { position: absolute; opacity: 0; inset: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.option-chip span {
+  display: inline-flex; align-items: center; min-height: 46px; padding: 0 1.1rem;
+  border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
+  font: 500 var(--fs-sm) var(--font-body); transition: border-color 0.2s var(--ease), background 0.2s var(--ease), color 0.2s var(--ease);
+}
+.option-chip:hover span { border-color: var(--blue-soft); color: var(--text); }
+.option-chip input:checked + span { background: var(--blue); border-color: var(--blue); color: #fff; }
+.option-chip input:focus-visible + span { outline: 3px solid var(--blue-soft); outline-offset: 3px; }
+
+/* পরিমাণ বদলানো */
+.buy-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; margin-top: var(--space-2); }
+.buy-row .btn { flex: 1 1 140px; }
+.stepper { display: inline-flex; align-items: center; border: 1px solid var(--line); border-radius: 999px; }
+.stepper button { width: 44px; height: 46px; background: none; border: 0; color: var(--text); font-size: 1.25rem; cursor: pointer; border-radius: 999px; }
+.stepper button:disabled { opacity: 0.35; cursor: not-allowed; }
+.stepper-qty { min-width: 2rem; text-align: center; font-weight: 600; }
+
+/* ফর্ম */
+.form-field { margin-bottom: var(--space-2); }
+.form-label { display: block; font-weight: 600; margin-bottom: 0.35rem; font-size: var(--fs-sm); }
+.form-hint { font-size: var(--fs-xs); margin: 0.25rem 0 0; }
+.form-error { color: var(--danger); font-size: var(--fs-sm); margin: 0.35rem 0 0; }
+.form-error[hidden] { display: none; }
+.input[aria-invalid="true"] { border-color: var(--danger); }
+.textarea { padding: 0.75rem 1rem; min-height: 90px; resize: vertical; line-height: 1.5; }
+.checkout-form .summary-h { margin-bottom: var(--space-2); }
+
+/* কার্ট */
+.cart-layout { display: grid; gap: var(--space-4); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 860px) { .cart-layout { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; } .cart-side { position: sticky; top: 88px; } }
+.cart-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.cart-line { display: grid; grid-template-columns: 84px 1fr auto; gap: var(--space-2); padding: var(--space-2); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-md); }
+.cart-media { display: block; width: 84px; height: 105px; border-radius: var(--r-sm); overflow: hidden; background: var(--panel-2); }
+.cart-media img, .cart-media .ph { width: 100%; height: 100%; object-fit: cover; font-size: 0; padding: 0; }
+.cart-media .ph svg { width: 32px; height: 32px; margin: 0; }
+.cart-media .ph span { display: none; }
+.cart-body p { margin: 0; font-size: var(--fs-sm); }
+.cart-name { font-weight: 600; text-decoration: none; line-height: 1.3; display: inline-block; }
+.cart-name:hover { text-decoration: underline; }
+.cart-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 0.5rem; }
+.cart-total { font: 700 var(--fs-md) var(--font-display); margin: 0; white-space: nowrap; }
+.summary { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--space-3); }
+.summary-h { font-size: var(--fs-lg); margin-bottom: var(--space-2); }
+.sum-rows { display: grid; gap: 0.5rem; margin-top: var(--space-2); }
+.sum-row { display: flex; justify-content: space-between; gap: 1rem; color: var(--muted); }
+.sum-good { color: var(--good); }
+.sum-total { color: var(--text); font: 700 var(--fs-lg) var(--font-display); padding-top: 0.75rem; border-top: 1px solid var(--line); }
+.sum-note { font-size: var(--fs-xs); margin: 0.75rem 0 0; }
+.promo { margin-top: var(--space-1); }
+.promo-form { display: flex; gap: 0.5rem; }
+.promo-form .input { flex: 1; min-width: 0; text-transform: uppercase; }
+.promo-form .btn { min-height: 46px; }
+.promo-msg { font-size: var(--fs-sm); margin: 0.4rem 0 0; color: var(--good); }
+.promo-msg.is-error { color: var(--danger); }
+.cart-side > * + * { margin-top: var(--space-2); }
+.cart-checkout { width: 100%; }
+.cart-side .card-more, .checkout-form .card-more { display: block; text-align: center; }
+
+/* চেকআউট সফল */
+.success { max-width: 520px; margin-inline: auto; text-align: center; padding: var(--space-4) var(--space-3); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); display: grid; gap: var(--space-1); }
+.success:focus { outline: none; }
+.success p { margin: 0; }
+.success-ref { font: 700 var(--fs-lg) var(--font-display); letter-spacing: 0.04em; margin-block: 0.25rem !important; }
+.success .btn { width: 100%; margin-top: var(--space-1); }
+
+@media (max-width: 420px) {
+  .cart-line { grid-template-columns: 72px 1fr; }
+  .cart-media { width: 72px; height: 90px; }
+  .cart-total { grid-column: 2; }
+}

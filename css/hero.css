@@ -1,0 +1,68 @@
+/* হোম পেজের হিরো ও ভাসমান পণ্যের মঞ্চ */
+.hero { position: relative; overflow: clip; padding-block: var(--space-4) var(--space-5); }
+.hero-grid { display: grid; gap: var(--space-4); align-items: center; }
+.hero-copy h1 { max-width: 14ch; }
+.lead { font-size: var(--fs-md); color: var(--muted); max-width: 46ch; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-block: var(--space-3) var(--space-2); }
+.hero-price { font-size: var(--fs-sm); color: var(--muted); }
+
+@media (min-width: 860px) {
+  .hero { padding-block: var(--space-5); }
+  .hero-grid { grid-template-columns: 1.05fr 1fr; gap: var(--space-4); }
+}
+
+/* ---- অ্যানিমেশনের জন্য আলাদা করে রাখা জায়গা (ভাগ ৯-এ এটা বদলাবে) ---- */
+#hero-animation { position: relative; width: 100%; max-width: 540px; margin-inline: auto; aspect-ratio: 1 / 1; }
+.stage { position: absolute; inset: 0; perspective: 1000px; }
+.stage-glow {
+  position: absolute; inset: 8% 6%; border-radius: 50%;
+  background: radial-gradient(circle, var(--blue-glow), transparent 68%);
+  filter: blur(8px);
+}
+
+.float-card {
+  position: absolute;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  box-shadow: 0 30px 50px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.03) inset;
+  transform: translateY(0) rotateY(var(--ry)) rotateZ(var(--rz));
+  animation: drift var(--dur) ease-in-out var(--delay) infinite;
+  will-change: transform;
+}
+.float-card img, .float-card .ph { width: 100%; height: 100%; object-fit: contain; background: transparent; }
+
+.pos-a { --ry: -14deg; --rz: -5deg; --dur: 9s; --delay: 0s;    left: 6%;  top: 8%;  width: 46%; aspect-ratio: 3 / 4; }
+.pos-b { --ry: 12deg;  --rz: 4deg;  --dur: 11s; --delay: -3s;  right: 4%; top: 22%; width: 40%; aspect-ratio: 4 / 5; }
+.pos-c { --ry: -8deg;  --rz: 8deg;  --dur: 7.5s; --delay: -5s; left: 30%; bottom: 4%; width: 32%; aspect-ratio: 1 / 1; }
+
+@keyframes drift {
+  0%, 100% { transform: translateY(0) rotateY(var(--ry)) rotateZ(var(--rz)); }
+  50% { transform: translateY(-14px) rotateY(calc(var(--ry) + 9deg)) rotateZ(var(--rz)); }
+}
+
+/* ---- ভাগ ৯: স্ক্রল-চালিত গল্প (js/hero-anim.js চালু হলে .is-story বসে) ---- */
+.hero.is-story { height: var(--story-len, 460vh); padding: 0; overflow: visible; }
+.story-pin {
+  position: sticky; top: 64px; height: calc(100vh - 64px); height: calc(100svh - 64px);
+  overflow: hidden; display: flex; align-items: flex-start; padding-top: var(--space-3);
+}
+.story-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.story-pin .hero-grid { position: relative; z-index: 2; margin-inline: auto; opacity: var(--copy-a, 1); pointer-events: none; }
+.story-pin .hero-grid .hero-copy a { pointer-events: auto; }
+.story-pin .hero-grid.is-faded { visibility: hidden; }
+#hero-animation.is-live { display: none; }
+.story-caption, .story-finale { position: absolute; left: 0; right: 0; z-index: 3; margin: 0; text-align: center; padding-inline: var(--space-3); }
+.story-caption {
+  top: 14%; opacity: 0; pointer-events: none;
+  font: 600 clamp(1.4rem, 3.4vw + 0.4rem, 2.6rem) var(--font-display); letter-spacing: -0.01em;
+  text-shadow: 0 2px 24px rgba(7, 9, 13, 0.9);
+}
+.story-finale { bottom: 4%; opacity: 0; visibility: hidden; display: grid; gap: 0.6rem; justify-items: center; }
+.story-finale h2 { margin: 0; text-shadow: 0 2px 24px rgba(7, 9, 13, 0.9); }
+.story-finale p { margin: 0; color: var(--muted); max-width: 40ch; }
+@media (min-width: 860px) {
+  .story-pin { align-items: center; padding-top: 0; }
+  .story-caption { top: 12%; }
+}

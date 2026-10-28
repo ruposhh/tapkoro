@@ -1,0 +1,54 @@
+/* হোমের নতুন সেকশন (How it works, Why, About, FAQ, Contact), নীতিমালা ও ৪০৪ পেজ */
+.section h2 + .lead { margin-top: -0.5rem; margin-bottom: var(--space-3); }
+
+.steps, .benefits { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 700px) { .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); } .benefits { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1000px) { .benefits { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+.step, .benefit { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-lg); padding: var(--space-3); }
+.step h3, .benefit h3 { font-size: var(--fs-md); margin-bottom: 0.4rem; }
+.step p, .benefit p { margin: 0; color: var(--muted); font-size: var(--fs-sm); }
+.step-num {
+  display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: var(--space-2);
+  border-radius: 50%; background: var(--blue); color: #fff; font: 700 var(--fs-md) var(--font-display);
+  box-shadow: 0 6px 20px var(--blue-glow);
+}
+
+.about { max-width: 720px; }
+
+.faq { display: grid; gap: 0.75rem; max-width: 800px; }
+.faq details { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-md); }
+.faq summary {
+  list-style: none; cursor: pointer; padding: 1rem 3rem 1rem 1.25rem; position: relative;
+  font-weight: 600; min-height: 52px; display: flex; align-items: center;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: "+"; position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%);
+  font: 400 1.5rem/1 var(--font-body); color: var(--blue-soft);
+}
+.faq details[open] summary::after { content: "−"; }
+.faq details p { margin: 0; padding: 0 1.25rem 1.1rem; color: var(--muted); }
+.faq details a { color: var(--blue-soft); }
+
+.contact-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.contact-actions .btn[hidden] { display: none; }
+.contact-social { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-top: var(--space-2); }
+.contact-social a { color: var(--muted); }
+.contact-social a:hover { color: var(--text); }
+
+/* ফুটারে ৪টা কলাম */
+@media (min-width: 700px) { .footer-grid { grid-template-columns: 1.6fr 1fr 1.2fr 1.4fr; } }
+
+/* নীতিমালা */
+.policy { max-width: 760px; }
+.policy-block { padding-block: var(--space-3); border-top: 1px solid var(--line); }
+.policy-block h2 { font-size: var(--fs-lg); }
+.policy-block p { color: var(--muted); }
+.policy-block p:last-child { margin-bottom: 0; }
+
+/* ৪০৪ */
+.notfound { text-align: center; padding-block: var(--space-5); }
+.notfound .lead { margin-inline: auto; }
+.nf-code { font: 700 clamp(4rem, 20vw, 8rem)/1 var(--font-display); color: var(--blue-soft); margin-bottom: var(--space-1); }
+.notfound .btn { margin: 0.25rem; }
