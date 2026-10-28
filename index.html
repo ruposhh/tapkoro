@@ -23,6 +23,8 @@
   <link rel="stylesheet" href="css/catalog.css">
   <link rel="stylesheet" href="css/pages.css">
   <link rel="stylesheet" href="css/sections.css">
+  <link rel="stylesheet" href="css/fx.css">
+  <link rel="stylesheet" href="css/glass.css">
 </head>
 <body id="top" data-page="home">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -123,6 +125,24 @@
       </div>
       <p class="contact-social" id="contact-social"></p>
     </section>
+
+    <!-- ক্যাট-পাও ফিনালে: স্ক্রল করে একদম নিচে এলে কণারা জড়ো হয়ে ৪টা ট্যাগ বানায় (js/scroll-fx.js)।
+         অ্যানিমেশন না চললে এই ছবিগুলোই সাধারণ গ্রিডে দেখায়। -->
+    <section class="paws" id="paws" aria-labelledby="paws-h">
+      <div class="paw-pin">
+        <div class="paw-stage" id="paw-stage">
+          <div class="paw-slot"><img src="assets/anim/paw-bw-front.webp" alt="" width="560" height="581" loading="lazy" decoding="async"></div>
+          <div class="paw-slot"><img src="assets/anim/paw-red-front.webp" alt="" width="560" height="588" loading="lazy" decoding="async"></div>
+          <div class="paw-slot"><img src="assets/anim/paw-bw-back.webp" alt="" width="560" height="582" loading="lazy" decoding="async"></div>
+          <div class="paw-slot"><img src="assets/anim/paw-red-back.webp" alt="" width="560" height="581" loading="lazy" decoding="async"></div>
+        </div>
+        <div class="paw-copy glass">
+          <h2 id="paws-h">Cat Collar Tags</h2>
+          <p>Black-and-white and red paw tags. Tap to share your contact, so a lost cat can find the way home.</p>
+          <a class="btn btn-primary" id="paw-cta" href="#products">See the Cat Collar Tag</a>
+        </div>
+      </div>
+    </section>
   </main>
 
   <div id="site-footer"></div>
@@ -134,8 +154,9 @@
   <script src="js/layout.js"></script>
   <script src="js/sections.js"></script>
   <script src="js/catalog.js"></script>
-  <script src="js/hero-anim.js"></script>
+  <script src="js/scroll-fx.js"></script>
   <script src="js/hero.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/glass.js"></script>
 </body>
 </html>
