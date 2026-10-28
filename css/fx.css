@@ -1,0 +1,68 @@
+/*
+  স্ক্রল-অ্যানিমেশনের স্টাইল (js/scroll-fx.js-এর সঙ্গে চলে)।
+  - #fx-canvas: পুরো পেজের পেছনে স্থির ক্যানভাস, কণারা এখানে ভাসে।
+  - #paws: একদম নিচের ফিনালে সেকশন, যেখানে কণারা জড়ো হয়ে ৪টা ক্যাট-পাও ট্যাগ বানায়।
+  অ্যানিমেশন না চললে .is-live বসে না, তখন নিচের সাধারণ ছবির গ্রিডই দেখায়।
+*/
+
+/* পেছনের হালকা আলোর আভা (ব্যাকগ্রাউন্ড) */
+body::before {
+  content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(60% 46% at 80% 6%, rgba(21, 87, 255, 0.16), transparent 70%),
+    radial-gradient(46% 38% at 6% 72%, rgba(255, 140, 70, 0.07), transparent 72%);
+}
+#fx-canvas { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+
+/* কনটেন্ট ক্যানভাসের ওপরে থাকে */
+main, #site-footer { position: relative; z-index: 1; }
+
+/* হিরোর ডান পাশের জায়গা: অ্যানিমেশন চালু হলে ছবি লুকায়, কিন্তু জায়গাটা থাকে (মাপ নিতে লাগে) */
+#hero-animation.is-live { display: block; visibility: hidden; }
+
+/* ---------------- ক্যাট-পাও ফিনালে ---------------- */
+.paws { position: relative; padding-block: var(--space-5); }
+.paw-pin { display: flex; flex-direction: column; align-items: center; gap: var(--space-3); }
+.paw-copy { order: -1; text-align: center; max-width: 560px; margin-inline: auto; padding: var(--space-3) var(--space-3) var(--space-3); }
+.paw-copy h2 { margin-bottom: 0.4rem; }
+.paw-copy p { color: var(--muted); margin-bottom: var(--space-2); }
+.paw-stage {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2);
+  width: min(var(--wrap), 100% - 2rem); margin-inline: auto;
+}
+.paw-slot { aspect-ratio: 1 / 1; display: grid; place-items: center; }
+.paw-slot img { width: 78%; height: auto; filter: drop-shadow(0 18px 24px rgba(0, 0, 0, 0.5)); }
+@media (min-width: 860px) { .paw-stage { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
+/* অ্যানিমেশন চালু: সেকশন লম্বা হয়, ভেতরের অংশ আটকে থাকে (sticky) */
+.paws.is-live { height: var(--paw-len, 320vh); padding: 0; }
+.paws.is-live .paw-pin {
+  position: sticky; top: 64px; height: calc(100vh - 64px); height: calc(100svh - 64px);
+  justify-content: center; overflow: hidden; gap: var(--space-2);
+}
+.paws.is-live .paw-slot img { visibility: hidden; }
+.paws.is-live .paw-stage { max-width: 960px; }
+.paws.is-live .paw-copy {
+  opacity: var(--paw-a, 0); pointer-events: none;
+  transform: translate3d(0, calc((1 - var(--paw-a, 0)) * 16px), 0);
+  will-change: opacity, transform;
+}
+.paws.is-live.paw-copy-on .paw-copy { pointer-events: auto; }
+@media (max-width: 859px) {
+  .paws.is-live .paw-stage { gap: 0.25rem; width: min(430px, 100% - 1rem); }
+  .paws.is-live .paw-copy { padding: var(--space-2) var(--space-3); }
+  .paws.is-live .paw-copy p { font-size: var(--fs-sm); margin-bottom: var(--space-1); }
+}
+
+/* ওপরের হিরো: মোবাইলে লেখা + কার্ডের জায়গা যেন পর্দায় ধরে */
+@media (max-width: 859px) {
+  .hero.is-story .story-pin .hero-grid { gap: var(--space-2); }
+  .hero.is-story #hero-animation { max-width: min(78vw, 46svh); }
+  .hero.is-story .hero-copy h1 { font-size: clamp(2rem, 9vw, 2.75rem); }
+}
+
+/* চাবির রিং ওপরে উঠে আসে, তাই লেখার প্যানেল ও ট্যাগের মাঝে বাড়তি ফাঁক */
+.paws.is-live .paw-stage { margin-top: clamp(1.25rem, 4svh, 2.5rem); }
+
+/* লেখার কাচের প্যানেল: গোল কোণ, দুই পাশে ফাঁক */
+.paw-copy { width: min(560px, 100% - 2rem); border-radius: var(--r-lg); }

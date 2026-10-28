@@ -1,0 +1,131 @@
+/*
+  Liquid Glass UI — সব পেজের কার্ড, বাটন, হেডার, ফুটারে কাচের মতো স্বচ্ছ ভাব।
+  এই ফাইল সবার শেষে লোড হয়, তাই আগের স্টাইল ঢেকে দেয়। বন্ধ করতে চাইলে HTML থেকে এই লিংকটা সরাও।
+
+  পারফরম্যান্স: ঝাপসা (blur) শুধু হেডার, মেনু ও লেখার প্যানেলে (কার্ডে নেই)।
+  কম-শক্তির ফোনে html-এ .lite বসে, তখন blur পুরো বন্ধ।
+*/
+:root {
+  --glass-fill: linear-gradient(150deg, rgba(255, 255, 255, 0.115), rgba(255, 255, 255, 0.035) 55%, rgba(255, 255, 255, 0.07));
+  --glass-tint: rgba(13, 17, 25, 0.5);
+  --glass-edge: rgba(255, 255, 255, 0.15);
+  --glass-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 0 28px rgba(255, 255, 255, 0.035),
+    0 18px 44px rgba(0, 0, 0, 0.38);
+  --glass-blur: blur(16px) saturate(165%);
+}
+
+html { scroll-behavior: smooth; }
+body { text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; }
+
+/* ---------- কাচের পৃষ্ঠ ---------- */
+.glass, .card, .step, .benefit, .faq details, .cart-line, .summary, .success, .empty,
+.gallery-main, .policy-block-glass {
+  position: relative; isolation: isolate;
+  background: var(--glass-fill), var(--glass-tint);
+  border: 1px solid var(--glass-edge);
+  box-shadow: var(--glass-shadow);
+}
+.empty { border-style: solid; }
+/* আলোর ঝলক: কোণে নরম আলো, মাউস নড়লে সরে (js/glass.js) */
+.glass::before, .card::before, .step::before, .benefit::before, .faq details::before, .cart-line::before, .summary::before, .success::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit;
+  background: radial-gradient(130% 90% at var(--mx, 18%) var(--my, -8%), rgba(255, 255, 255, 0.17), transparent 55%);
+  transition: opacity 0.4s var(--ease);
+}
+.card-media { background: rgba(255, 255, 255, 0.035); }
+.card { transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease); }
+
+@media (hover: hover) {
+  .card:hover { transform: translate3d(0, -4px, 0); border-color: rgba(120, 165, 255, 0.4);
+    box-shadow: var(--glass-shadow), 0 22px 60px rgba(21, 87, 255, 0.16); }
+}
+
+/* ---------- ঝাপসা কাচ (শুধু হেডার, মেনু, লেখার প্যানেল) ----------
+   কার্ডে blur নেই: নিচে প্রতি ফ্রেমে কণার ক্যানভাস বদলায়, তখন প্রতিটা কার্ডের blur নতুন করে হিসাব হতো (মাপে ~১১ms/ফ্রেম বেশি)।
+   কার্ডের কাচের ভাব আসে স্বচ্ছ রং, ধারের আলো ও ঝলক থেকে। */
+.site-header, .mobile-menu, .paw-copy, .toast {
+  -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+}
+html.lite *, html.lite *::before { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html.lite { --glass-tint: rgba(13, 17, 25, 0.72); }
+
+/* ---------- হেডার ও মেনু ---------- */
+.site-header {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025)), rgba(8, 11, 17, 0.62);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04), 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+.mobile-menu { background: rgba(8, 11, 17, 0.78); }
+.mobile-link { border-bottom-color: rgba(255, 255, 255, 0.08); }
+.nav-link { position: relative; transition: color 0.25s var(--ease); }
+.nav-link::after {
+  content: ""; position: absolute; left: 0.25rem; right: 0.25rem; bottom: 0.25rem; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--blue-soft), #ff9a52); transform: scaleX(0); transform-origin: left;
+  transition: transform 0.35s var(--ease);
+}
+.nav-link:hover::after { transform: scaleX(1); }
+
+/* ---------- বাটন ---------- */
+.btn { position: relative; overflow: hidden; isolation: isolate; }
+.btn-primary {
+  background: linear-gradient(180deg, #5b92ff 0%, #1557ff 62%, #0f45d6 100%);
+  border-color: rgba(160, 195, 255, 0.55);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -8px 16px rgba(0, 20, 90, 0.25), 0 10px 30px rgba(21, 87, 255, 0.38);
+}
+.btn-primary:hover { background: linear-gradient(180deg, #74a3ff 0%, #2a68ff 62%, #1550e6 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55), 0 14px 38px rgba(21, 87, 255, 0.5); }
+.btn-primary::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 35%, rgba(255, 255, 255, 0.38) 50%, transparent 65%);
+  transform: translateX(-120%); transition: transform 0.8s var(--ease);
+}
+.btn-primary:hover::after { transform: translateX(120%); }
+.btn-ghost {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.btn-ghost:hover { border-color: rgba(120, 165, 255, 0.6); background: linear-gradient(150deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06)); }
+.btn:active { transform: scale(0.98); }
+
+.cart-link, .burger {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+.chip { background: linear-gradient(150deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03)); border-color: rgba(255, 255, 255, 0.14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+.chip[aria-pressed="true"] { background: linear-gradient(180deg, #5b92ff, #1557ff); border-color: rgba(160, 195, 255, 0.55); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 6px 22px rgba(21, 87, 255, 0.35); }
+.input { background: rgba(255, 255, 255, 0.06); border-color: rgba(255, 255, 255, 0.14); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12); }
+.input:focus-visible { border-color: var(--blue-soft); }
+.step-num { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 6px 22px rgba(21, 87, 255, 0.45); }
+
+/* ---------- লেখা ---------- */
+h1, .paw-copy h2 {
+  background: linear-gradient(180deg, #ffffff 30%, #aebbd3 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+.lead { color: #aab4c6; }
+
+/* ---------- ফুটার ও বার্তা ---------- */
+.site-footer {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.015)), rgba(8, 11, 17, 0.7);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+.toast { background: rgba(20, 26, 38, 0.82); color: var(--text); border: 1px solid var(--glass-edge); box-shadow: var(--glass-shadow); }
+.wa-float { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 10px 28px rgba(37, 211, 102, 0.38), 0 2px 8px rgba(0, 0, 0, 0.5); }
+
+/* ---------- স্ক্রলে ধীরে ফুটে ওঠা (js/glass.js .rv বসায়) ---------- */
+.rv { opacity: 0; transform: translate3d(0, 22px, 0); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); transition-delay: var(--rv-d, 0s); }
+.rv.rv-in { opacity: 1; transform: none; }
+/* কার্ডের নিজের hover-transform-এর সঙ্গে ঝামেলা এড়াতে ফুটে ওঠার পর transition ফিরিয়ে দেওয়া হয় */
+.rv.rv-done { transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.45s var(--ease); transition-delay: 0s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .rv { opacity: 1; transform: none; transition: none; }
+  .btn-primary::after { display: none; }
+}
+
+/* সব কাচের পৃষ্ঠে গোল কোণ নিশ্চিত করা */
+.glass { border-radius: var(--r-lg); }

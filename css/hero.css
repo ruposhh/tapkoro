@@ -52,7 +52,6 @@
 .story-pin .hero-grid { position: relative; z-index: 2; margin-inline: auto; opacity: var(--copy-a, 1); pointer-events: none; }
 .story-pin .hero-grid .hero-copy a { pointer-events: auto; }
 .story-pin .hero-grid.is-faded { visibility: hidden; }
-#hero-animation.is-live { display: none; }
 .story-caption, .story-finale { position: absolute; left: 0; right: 0; z-index: 3; margin: 0; text-align: center; padding-inline: var(--space-3); }
 .story-caption {
   top: 14%; opacity: 0; pointer-events: none;
