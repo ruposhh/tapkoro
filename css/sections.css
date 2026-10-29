@@ -23,11 +23,13 @@
   font-weight: 600; min-height: 52px; display: flex; align-items: center;
 }
 .faq summary::-webkit-details-marker { display: none; }
-.faq summary::after {
-  content: "+"; position: absolute; right: 1.25rem; top: 50%; transform: translateY(-50%);
-  font: 400 1.5rem/1 var(--font-body); color: var(--blue-soft);
+.faq summary::before, .faq summary::after {
+  content: ""; position: absolute; right: 1.25rem; top: 50%; width: 14px; height: 2px; margin-top: -1px;
+  border-radius: 2px; background: var(--blue-soft); transition: transform 0.4s var(--ease);
 }
-.faq details[open] summary::after { content: "−"; }
+.faq summary::before { transform: rotate(90deg); }
+.faq details[open] summary::before, .faq details.is-open summary::before { transform: rotate(0deg); }
+.faq details.is-closing summary::before { transform: rotate(90deg); }
 .faq details p { margin: 0; padding: 0 1.25rem 1.1rem; color: var(--muted); }
 .faq details a { color: var(--blue-soft); }
 

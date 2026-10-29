@@ -79,7 +79,7 @@ body.menu-open { overflow: hidden; }
 
 /* ভাসমান WhatsApp বাটন */
 .wa-float {
-  position: fixed; right: 1rem; bottom: 1rem; z-index: 60;
+  position: fixed; left: 1rem; right: auto; bottom: 1rem; z-index: 60;
   width: 58px; height: 58px; border-radius: 50%; border: 0; cursor: pointer;
   background: #25d366; color: #07210f;
   display: grid; place-items: center;

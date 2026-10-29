@@ -19,6 +19,14 @@ h3 { font-size: var(--fs-lg); font-weight: 600; }
 p { margin: 0 0 var(--space-2); }
 
 :focus-visible { outline: 3px solid var(--blue-soft); outline-offset: 3px; border-radius: 4px; }
+/* ট্যাপ/ক্লিকে নীলচে চারকোনা আভা বন্ধ। কীবোর্ডে Tab চাপলে ফোকাস দাগ থাকে (:focus-visible) */
+html, a, button, summary, label, input, select, textarea, [role="button"] { -webkit-tap-highlight-color: transparent; }
+:focus:not(:focus-visible) { outline: none; }
+summary:focus, summary:focus-visible { outline: none; }
+.faq summary:focus-visible { box-shadow: inset 0 0 0 2px var(--blue-soft); border-radius: var(--r-md); }
+/* পেজ খোলার সময় নরমভাবে ফুটে ওঠা */
+body { animation: tk-page-in 0.7s var(--ease) both; }
+@keyframes tk-page-in { from { opacity: 0; } to { opacity: 1; } }
 
 .wrap { width: min(var(--wrap), 100% - 2rem); margin-inline: auto; }
 .section { padding-block: var(--space-5); }

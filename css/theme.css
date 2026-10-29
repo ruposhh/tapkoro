@@ -1,0 +1,102 @@
+/*
+  লাইট মোডের রং + থিম বাটনের স্টাইল। এই ফাইল সবার শেষে লোড হয়।
+  ডার্ক মোডে কিছুই বদলায় না (শুধু html[data-theme="light"] হলে কাজ করে)।
+*/
+
+/* ---- থিম বদলানোর বাটন (হেডারে) ---- */
+.theme-toggle {
+  position: relative; width: 46px; height: 46px; flex: none; padding: 0; cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 50%; color: var(--text);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  display: grid; place-items: center;
+  transition: transform 0.25s var(--ease), border-color 0.25s var(--ease);
+}
+.theme-toggle:hover { border-color: var(--blue-soft); }
+.theme-toggle:active { transform: scale(0.94); }
+.theme-toggle svg { grid-area: 1 / 1; width: 22px; height: 22px; transition: transform 0.5s var(--ease), opacity 0.35s var(--ease); }
+.theme-toggle .ic-moon { opacity: 0; transform: rotate(-70deg) scale(0.5); }
+html[data-theme="light"] .theme-toggle .ic-sun { opacity: 0; transform: rotate(70deg) scale(0.5); }
+html[data-theme="light"] .theme-toggle .ic-moon { opacity: 1; transform: none; }
+@media (max-width: 959px) {
+  .bar > .theme-toggle { margin-left: auto; }
+  .bar > .cart-link { margin-left: 0; }
+}
+
+/* দুই লোগো: ডার্কে সাদা-"Tap" লোগো, লাইটে আসল লোগো */
+.logo-light-only { display: none !important; }
+html[data-theme="light"] .logo-dark-only { display: none !important; }
+html[data-theme="light"] .logo-light-only { display: block !important; }
+
+/* থিম বদলানোর সময় রং নরমভাবে বদলায় */
+html.theme-anim body, html.theme-anim body *, html.theme-anim body *::before, html.theme-anim body *::after {
+  transition: background-color 0.5s var(--ease), color 0.5s var(--ease), border-color 0.5s var(--ease), box-shadow 0.5s var(--ease) !important;
+}
+
+/* ---------------- লাইট মোড ---------------- */
+html[data-theme="light"] {
+  --ink: #f3f6fb;
+  --panel: #ffffff;
+  --panel-2: #e9eff8;
+  --line: rgba(20, 40, 90, 0.13);
+  --paper: #101828;
+  --text: #0c1424;
+  --muted: #4f5d75;
+  --blue: #1557ff;
+  --blue-soft: #1d5be0;
+  --blue-glow: rgba(21, 87, 255, 0.22);
+
+  --glass-fill: linear-gradient(150deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.7));
+  --glass-tint: rgba(255, 255, 255, 0.6);
+  --glass-edge: rgba(25, 55, 120, 0.14);
+  --glass-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 14px 34px rgba(30, 60, 120, 0.12);
+}
+html[data-theme="light"].lite { --glass-tint: rgba(255, 255, 255, 0.85); }
+
+html[data-theme="light"] body::before {
+  background:
+    radial-gradient(60% 46% at 80% 6%, rgba(21, 87, 255, 0.1), transparent 70%),
+    radial-gradient(46% 38% at 6% 72%, rgba(80, 170, 255, 0.1), transparent 72%);
+}
+
+html[data-theme="light"] .site-header {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  border-bottom-color: rgba(25, 55, 120, 0.12);
+  box-shadow: 0 8px 26px rgba(30, 60, 120, 0.1);
+}
+html[data-theme="light"] .mobile-menu { background: rgba(255, 255, 255, 0.96); }
+html[data-theme="light"] .mobile-link { border-bottom-color: rgba(25, 55, 120, 0.1); }
+html[data-theme="light"] .site-footer {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.55)), #eef3fb;
+  border-top-color: rgba(25, 55, 120, 0.1);
+}
+
+html[data-theme="light"] h1,
+html[data-theme="light"] .paw-copy h2 {
+  background: linear-gradient(180deg, #0c1424 30%, #3a4b6e 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+}
+html[data-theme="light"] .lead { color: var(--muted); }
+
+html[data-theme="light"] .btn-ghost,
+html[data-theme="light"] .cart-link,
+html[data-theme="light"] .burger,
+html[data-theme="light"] .theme-toggle {
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.65));
+  border-color: rgba(25, 55, 120, 0.18);
+  box-shadow: inset 0 1px 0 #fff, 0 4px 12px rgba(30, 60, 120, 0.08);
+}
+html[data-theme="light"] .btn-ghost:hover { background: #fff; border-color: var(--blue-soft); }
+html[data-theme="light"] .chip { background: #fff; border-color: rgba(25, 55, 120, 0.16); box-shadow: none; }
+html[data-theme="light"] .chip[aria-pressed="true"] { background: linear-gradient(180deg, #5b92ff, #1557ff); color: #fff; border-color: rgba(21, 87, 255, 0.6); }
+html[data-theme="light"] .input { background: #fff; border-color: rgba(25, 55, 120, 0.18); box-shadow: none; color: var(--text); }
+html[data-theme="light"] .input:hover { border-color: rgba(25, 55, 120, 0.35); }
+html[data-theme="light"] .card-media { background: #eef3fb; }
+html[data-theme="light"] .nav-link:hover { color: var(--text); }
+
+html[data-theme="light"] .toast { background: rgba(16, 24, 40, 0.92); color: #f3f6fb; }
+html[data-theme="light"] .story-caption,
+html[data-theme="light"] .story-finale h2 { text-shadow: 0 2px 22px rgba(243, 246, 251, 0.95); }
+html[data-theme="light"] .paw-slot img { filter: drop-shadow(0 16px 20px rgba(30, 60, 120, 0.28)); }
+html[data-theme="light"] .wa-float { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 10px 26px rgba(37, 211, 102, 0.35), 0 2px 8px rgba(30, 60, 120, 0.25); }
+html[data-theme="light"] .card:hover { box-shadow: var(--glass-shadow), 0 20px 50px rgba(21, 87, 255, 0.14); }

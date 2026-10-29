@@ -27,7 +27,7 @@ main, #site-footer { position: relative; z-index: 1; }
 .paw-copy h2 { margin-bottom: 0.4rem; }
 .paw-copy p { color: var(--muted); margin-bottom: var(--space-2); }
 .paw-stage {
-  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-2);
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-2);
   width: min(var(--wrap), 100% - 2rem); margin-inline: auto;
 }
 .paw-slot { aspect-ratio: 1 / 1; display: grid; place-items: center; }
@@ -49,7 +49,7 @@ main, #site-footer { position: relative; z-index: 1; }
 }
 .paws.is-live.paw-copy-on .paw-copy { pointer-events: auto; }
 @media (max-width: 859px) {
-  .paws.is-live .paw-stage { gap: 0.25rem; width: min(430px, 100% - 1rem); }
+  .paws.is-live .paw-stage { gap: 0.1rem; width: calc(100% - 0.4rem); }
   .paws.is-live .paw-copy { padding: var(--space-2) var(--space-3); }
   .paws.is-live .paw-copy p { font-size: var(--fs-sm); margin-bottom: var(--space-1); }
 }
