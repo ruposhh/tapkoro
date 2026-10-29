@@ -85,7 +85,7 @@
       categoryLabel: "Pet tags",
       regularPrice: 420,
       offerPrice: 350,
-      images: ["assets/images/products/paw-both.webp", "assets/images/products/paw-red.webp", "assets/images/products/paw-white-black.webp", "assets/images/products/paw-black-white.webp", "assets/images/products/cat-poster-blue.webp", "assets/images/products/cat-poster-red.webp", "assets/images/products/cat-poster-grass.webp"],
+      images: ["assets/images/products/cat-poster-blue.webp", "assets/images/products/paw-both.webp", "assets/images/products/paw-red.webp", "assets/images/products/paw-white-black.webp", "assets/images/products/paw-black-white.webp", "assets/images/products/cat-poster-red.webp", "assets/images/products/cat-poster-grass.webp"],
       features: ["Just one tap", "Share location and contact", "Water-resistant and durable", "Lightweight, about 5 gram", "No battery, no charging"],
       options: [
         {

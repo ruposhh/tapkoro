@@ -149,79 +149,109 @@
     return c;
   }
 
-  // ক্যাট-পাও: বাইরের আকার (সব উপ-পথ একই দিকে ঘোরে, তাই জোড়া লাগে)
-  function pawPath(g) {
-    g.beginPath();
-    g.ellipse(240, 322, 160, 130, 0, 0, TAU);
-    g.moveTo(152, 196); g.ellipse(96, 200, 56, 72, -0.38, 0, TAU);
-    g.moveTo(240, 112); g.ellipse(188, 114, 52, 70, -0.12, 0, TAU);
-    g.moveTo(344, 112); g.ellipse(292, 114, 52, 70, 0.12, 0, TAU);
-    g.moveTo(440, 200); g.ellipse(384, 200, 56, 72, 0.38, 0, TAU);
-    g.moveTo(104, 238); g.lineTo(188, 150); g.lineTo(292, 150); g.lineTo(376, 238); g.lineTo(394, 322); g.lineTo(86, 322); g.closePath();
-    g.moveTo(270, 54); g.arc(240, 54, 30, 0, TAU);
-    g.rect(212, 54, 56, 100);
+  // ক্যাট-পাও: আসল ট্যাগের ছবি থেকে শুধু আকার, প্যাড ও NFC লোগোর মাপ নেওয়া হয়েছে (ছবি বসানো হয়নি)।
+  // সংখ্যাগুলো ৫৬০×৫৮১ মাপের ছবির বিন্দু (x,y,x,y...); কোড নিজে এঁকে আলো-ছায়া, চকচকে ভাব ও দানা দেয়।
+  var PAWD = {
+      outer: [281,0,257,0,243,8,226,25,219,46,214,53,191,56,175,63,144,91,126,117,113,147,107,172,107,211,103,215,90,213,63,215,40,228,22,250,11,273,0,308,0,352,9,384,20,404,39,425,53,436,69,443,103,449,97,484,102,507,112,529,125,546,143,562,157,570,185,578,188,581,213,581,268,558,295,551,323,550,377,560,404,560,426,554,443,545,455,536,471,518,487,485,490,453,481,420,514,407,534,390,550,363,559,333,559,298,552,271,540,241,526,220,513,207,493,196,472,193,451,197,447,192,443,162,435,135,410,92,387,69,373,60,352,52,327,49,312,20,298,8],
+      hole: [248,48,253,43,261,39,270,38,282,43,289,51,292,59,291,68,287,73,278,77,264,76,258,73,251,66,247,57],
+      pads: [[127,465,131,497,151,530,164,542,183,552,214,555,235,550,274,532,304,524,340,524,391,536,417,532,437,520,456,497,466,470,468,442,458,418,428,396,411,379,376,330,353,305,321,286,302,282,277,282,246,293,222,314,202,343,175,401,139,440],
+        [73,240,57,248,38,275,28,312,29,347,32,355,48,361,48,366,37,373,37,380,52,404,76,421,92,425,106,424,132,414,152,394,160,368,158,341,148,306,137,285,119,262,91,241],
+        [468,212,457,217,448,226,430,256,419,294,418,335,425,361,441,378,462,387,486,388,506,380,525,359,534,334,536,304,528,268,512,237,488,215],
+        [205,79,189,81,177,87,156,109,139,140,130,177,133,221,144,245,163,263,187,271,218,269,238,258,257,234,263,203,261,161,249,121,241,106,225,88],
+        [329,72,309,83,294,111,289,141,293,204,305,230,323,249,344,258,373,258,400,245,411,230,420,199,416,159,404,129,387,105,352,75]],
+      logo: [[256,415,252,415,250,417,250,444,246,448,241,448,234,445,229,437,213,421,208,421,208,469,206,476,210,481,216,482,218,480,219,470,217,455,222,449,231,451,254,475,259,475,259,420],
+        [307,412,284,412,279,414,276,418,275,470,276,475,279,479,283,479,286,475,285,458,287,454,291,451,304,451,308,447,308,443,305,440,291,440,285,433,285,426,292,421,309,420,310,415],
+        [350,409,337,414,321,431,320,447,324,454,327,465,333,471,346,477,359,477,371,471,371,464,368,462,362,462,357,465,345,464,334,455,331,447,331,434,340,423,351,419,358,419,362,421,367,421,369,419,369,416,362,410],
+        [213,374,219,382,224,384,233,384,258,365,266,361,284,356,304,356,325,363,338,372,343,378,354,380,364,372,365,361,361,354,354,347,334,334,309,326,283,325,257,331,239,340,229,347,219,357,214,364],
+        [169,321,170,331,176,338,190,338,210,321,218,317,228,309,253,298,277,293,307,293,327,297,356,310,385,332,395,332,400,329,404,321,404,315,400,306,388,295,356,276,334,268,325,267,313,263,283,262,249,267,214,282,203,288,177,309],
+        [126,284,129,289,136,293,146,292,184,262,210,247,244,235,274,230,319,231,355,240,390,257,423,283,428,285,433,285,438,282,442,274,442,265,437,258,414,239,403,233,399,229,367,214,348,208,324,203,277,200,249,204,225,210,202,218,181,228,162,240,155,247,144,254,130,268,126,274]],
+    };
+  var PW = 560, PH = 581, PKS = 480 / 560, PCW = 480, PCH = Math.round(581 * 480 / 560);   // PCH = 498
+  // বিন্দুগুলোর মাঝ দিয়ে নরম বাঁকা বন্ধ পথ
+  function smoothPoly(g, a) {
+    var n = a.length / 2, k = PKS;
+    function X(i) { return a[(i % n) * 2] * k; }
+    function Y(i) { return a[(i % n) * 2 + 1] * k; }
+    g.moveTo((X(n - 1) + X(0)) / 2, (Y(n - 1) + Y(0)) / 2);
+    for (var i = 0; i < n; i++) g.quadraticCurveTo(X(i), Y(i), (X(i) + X(i + 1)) / 2, (Y(i) + Y(i + 1)) / 2);
+    g.closePath();
   }
+  function bodyPath(g) { g.beginPath(); smoothPoly(g, PAWD.outer); smoothPoly(g, PAWD.hole); }
   var PAW_STYLE = {
-    bw: { outer: "#f5f5f2", outer2: "#d6d6d1", detail: "#101114", rim: "rgba(0,0,0,0.16)" },
-    red: { outer: "#d9222e", outer2: "#a30f1b", detail: "#f7f7f4", rim: "rgba(0,0,0,0.22)" },
+    bw: { outer: "#f5f5f1", outer2: "#cdcdc7", detail: "#111214", rim: "rgba(0,0,0,0.2)", padTop: "#2a2b30", padBot: "#050506", padHi: 0.42, padRim: "rgba(255,255,255,0.55)" },
+    red: { outer: "#dc2330", outer2: "#9c0d19", detail: "#f8f8f5", rim: "rgba(0,0,0,0.26)", padTop: "#ffffff", padBot: "#d6d6d0", padHi: 0.9, padRim: "rgba(255,255,255,0.6)" },
   };
-  function pawPad(g, drawFn, P, light) {
-    g.save();
-    drawFn(g); g.fillStyle = P.detail; g.fill();
-    g.clip();
-    var lg = g.createLinearGradient(0, 150, 0, 450);
-    lg.addColorStop(0, light ? "rgba(255,255,255,0.0)" : "rgba(255,255,255,0.34)");
-    lg.addColorStop(0.5, "rgba(255,255,255,0)");
-    lg.addColorStop(1, light ? "rgba(90,95,110,0.28)" : "rgba(0,0,0,0.0)");
-    g.fillStyle = lg; g.fillRect(0, 0, 480, 480);
-    g.restore();
-    g.save(); drawFn(g); g.lineWidth = 3; g.strokeStyle = P.rim; g.stroke(); g.restore();
-  }
   function artPaw(kind, back) {
-    var P = PAW_STYLE[kind], c = mk(480, 480), g = c.getContext("2d");
-    var gr = g.createLinearGradient(40, 20, 440, 460);
+    var P = PAW_STYLE[kind], c = mk(PCW, PCH), g = c.getContext("2d");
+    // ---- শরীর ----
+    var gr = g.createLinearGradient(60, 10, 420, PCH);
     gr.addColorStop(0, P.outer); gr.addColorStop(1, P.outer2);
-    pawPath(g); g.fillStyle = gr; g.fill();
-    g.save(); pawPath(g); g.clip();
-    // ধারের নরম ছায়া ও ওপরের আলো
-    var sh = g.createLinearGradient(0, 0, 0, 480);
-    sh.addColorStop(0, "rgba(255,255,255,0.28)"); sh.addColorStop(0.5, "rgba(255,255,255,0)"); sh.addColorStop(1, "rgba(0,0,0,0.18)");
-    g.fillStyle = sh; g.fillRect(0, 0, 480, 480);
+    bodyPath(g); g.fillStyle = gr; g.fill("evenodd");
+    g.save(); bodyPath(g); g.clip("evenodd");
+    // ওপরে আলো, নিচে ছায়া
+    var sh = g.createLinearGradient(0, 0, 0, PCH);
+    sh.addColorStop(0, "rgba(255,255,255,0.3)"); sh.addColorStop(0.45, "rgba(255,255,255,0)"); sh.addColorStop(1, "rgba(0,0,0,0.22)");
+    g.fillStyle = sh; g.fillRect(0, 0, PCW, PCH);
+    // কিনারার গোল ঢাল (bevel): ভেতরের দিকে বাম-ওপর হালকা, ডান-নিচ গাঢ়
+    g.lineJoin = "round";
+    bodyPath(g); g.save(); g.translate(2.2, 2.6); g.lineWidth = 11; g.strokeStyle = "rgba(0,0,0,0.2)"; g.stroke(); g.restore();
+    bodyPath(g); g.save(); g.translate(-1.6, -1.8); g.lineWidth = 9; g.strokeStyle = "rgba(255,255,255,0.34)"; g.stroke(); g.restore();
+    // দানা: লালে চকচকে গুঁড়ো, সাদায় মিহি দানা
+    var rnd = mulberry(kind === "red" ? 77 : 31), i;
     if (kind === "red") {
-      var rnd = mulberry(77);
-      for (var i = 0; i < 260; i++) {
-        g.fillStyle = "rgba(255,255,255," + (0.08 + rnd() * 0.3).toFixed(2) + ")";
-        g.fillRect(rnd() * 480, rnd() * 480, 1.6 + rnd() * 1.6, 1.6 + rnd() * 1.6);
-      }
+      for (i = 0; i < 420; i++) { g.fillStyle = "rgba(255,255,255," + (0.08 + rnd() * 0.32).toFixed(2) + ")"; g.fillRect(rnd() * PCW, rnd() * PCH, 1.2 + rnd() * 1.7, 1.2 + rnd() * 1.7); }
+    } else {
+      for (i = 0; i < 260; i++) { g.fillStyle = "rgba(" + (rnd() < 0.5 ? "255,255,255," : "90,90,90,") + (0.05 + rnd() * 0.12).toFixed(2) + ")"; g.fillRect(rnd() * PCW, rnd() * PCH, 1 + rnd() * 1.2, 1 + rnd() * 1.2); }
     }
     g.restore();
-    pawPath(g); g.lineWidth = 4; g.strokeStyle = P.rim; g.stroke();
+    bodyPath(g); g.lineWidth = 3; g.strokeStyle = P.rim; g.stroke();
 
     if (!back) {
-      arcs(g, 240, 288, [34, 70, 106], P.detail, 17);
-      g.fillStyle = P.detail; g.textAlign = "center"; g.textBaseline = "alphabetic";
-      g.font = "800 76px " + FONT; g.fillText("NFC", 240, 398);
+      // ---- সামনে: NFC লোগো (সামান্য উঁচু ছাপের মতো) ----
+      function logo(dx, dy, col) {
+        g.fillStyle = col; g.beginPath();
+        PAWD.logo.forEach(function (sh2) {
+          var a = sh2, n = a.length / 2;
+          g.moveTo(a[0] * PKS + dx, a[1] * PKS + dy);
+          for (var q = 1; q < n; q++) g.lineTo(a[q * 2] * PKS + dx, a[q * 2 + 1] * PKS + dy);
+          g.closePath();
+        });
+        g.fill();
+      }
+      logo(1.4, 1.8, kind === "red" ? "rgba(70,0,8,0.45)" : "rgba(0,0,0,0.25)");
+      logo(0, 0, P.detail);
+      if (kind === "bw") logo(-0.8, -0.9, "rgba(255,255,255,0.0)");
     } else {
-      var light = kind === "red";
-      pawPad(g, function (q) {
-        q.beginPath(); q.moveTo(240, 274);
-        q.bezierCurveTo(296, 274, 344, 326, 356, 372);
-        q.bezierCurveTo(368, 416, 338, 436, 300, 428);
-        q.bezierCurveTo(274, 422, 260, 410, 240, 410);
-        q.bezierCurveTo(220, 410, 206, 422, 180, 428);
-        q.bezierCurveTo(142, 436, 112, 416, 124, 372);
-        q.bezierCurveTo(136, 326, 184, 274, 240, 274);
-        q.closePath();
-      }, P, light);
-      [[102, 204, 34, 50, -0.38], [190, 120, 32, 48, -0.12], [290, 120, 32, 48, 0.12], [378, 204, 34, 50, 0.38]].forEach(function (t) {
-        pawPad(g, function (q) { q.beginPath(); q.ellipse(t[0], t[1], t[2], t[3], t[4], 0, TAU); }, P, light);
+      // ---- পেছনে: ৫টা চকচকে রেজিনের প্যাড ----
+      PAWD.pads.forEach(function (pad) {
+        // প্যাডের চারপাশে খাঁজের ছায়া
+        g.save(); g.beginPath(); smoothPoly(g, pad); g.lineWidth = 7; g.strokeStyle = "rgba(0,0,0,0.22)"; g.translate(0, 1.5); g.stroke(); g.restore();
+        g.save(); g.beginPath(); smoothPoly(g, pad); g.clip();
+        var b0 = pad, ymin = 1e9, ymax = -1e9, xmin = 1e9, xmax = -1e9;
+        for (var q = 0; q < b0.length; q += 2) { ymin = Math.min(ymin, b0[q + 1]); ymax = Math.max(ymax, b0[q + 1]); xmin = Math.min(xmin, b0[q]); xmax = Math.max(xmax, b0[q]); }
+        ymin *= PKS; ymax *= PKS; xmin *= PKS; xmax *= PKS;
+        var pg = g.createLinearGradient(0, ymin, 0, ymax);
+        pg.addColorStop(0, P.padTop); pg.addColorStop(1, P.padBot);
+        g.fillStyle = pg; g.fillRect(xmin - 4, ymin - 4, xmax - xmin + 8, ymax - ymin + 8);
+        // গম্বুজের চকচকে আভা (বাম-ওপরে বড় আলো, ডান-নিচে ছোট প্রতিফলন)
+        var hx = xmin + (xmax - xmin) * 0.3, hy = ymin + (ymax - ymin) * 0.24, hr = Math.max(xmax - xmin, ymax - ymin) * 0.55;
+        var hg = g.createRadialGradient(hx, hy, 0, hx, hy, hr);
+        hg.addColorStop(0, "rgba(255,255,255," + P.padHi + ")"); hg.addColorStop(0.4, "rgba(255,255,255," + (P.padHi * 0.25).toFixed(2) + ")"); hg.addColorStop(1, "rgba(255,255,255,0)");
+        g.fillStyle = hg; g.fillRect(xmin - 4, ymin - 4, xmax - xmin + 8, ymax - ymin + 8);
+        var rx = xmin + (xmax - xmin) * 0.72, ry = ymin + (ymax - ymin) * 0.86;
+        var rg2 = g.createRadialGradient(rx, ry, 0, rx, ry, hr * 0.35);
+        rg2.addColorStop(0, "rgba(255,255,255," + (kind === "bw" ? 0.28 : 0.5) + ")"); rg2.addColorStop(1, "rgba(255,255,255,0)");
+        g.fillStyle = rg2; g.fillRect(xmin - 4, ymin - 4, xmax - xmin + 8, ymax - ymin + 8);
+        g.restore();
+        // রেজিনের কিনারার উজ্জ্বল রেখা
+        g.beginPath(); smoothPoly(g, pad); g.lineWidth = 3.2; g.strokeStyle = P.padRim; g.stroke();
       });
     }
-    // চাবির ছিদ্র
+    // ---- চাবির ছিদ্র (এখানে কোনো ধাতব রিং নেই) ----
     g.globalCompositeOperation = "destination-out";
-    g.beginPath(); g.arc(240, 54, 13, 0, TAU); g.fill();
+    g.beginPath(); smoothPoly(g, PAWD.hole); g.fill();
     g.globalCompositeOperation = "source-over";
-    g.lineWidth = 3; g.strokeStyle = P.rim; g.beginPath(); g.arc(240, 54, 14, 0, TAU); g.stroke();
+    g.beginPath(); smoothPoly(g, PAWD.hole); g.lineWidth = 3; g.strokeStyle = P.rim; g.stroke();
     return c;
   }
 
@@ -233,24 +263,30 @@
   }
 
   // বস্তুর সংজ্ঞা: slab = একটা পুরু পাত (x,y = কেন্দ্র, w,h = মাপ, d = পুরুত্ব) — একক: বস্তুর "ইউনিট"
+  // পুরুত্বের ধারের ৩ রঙ: পেছনে গাঢ়, মাঝখানে মাঝারি, সামনের কিনারায় হালকা (আলো পড়ার মতো)
+  function tones(f, mid, dark, light) { return { e: tint(f, mid), ed: tint(f, dark), el: tint(f, light) }; }
   function buildArt() {
     var base = artBase();
     function social(kind) {
       return {
         W: 1.1, H: 1.58,
         slabs: [
-          { f: artSocial(kind, false), b: artSocial(kind, true), x: 0, y: -0.09, w: 1, h: 1.4, d: 0.05, edge: "#dfe5ef" },
+          (function () {
+            var f = artSocial(kind, false), t = tones(f, "#d3d9e5", "#a3abbd", "#f6f8fc");
+            return { f: f, b: artSocial(kind, true), e: t.e, ed: t.ed, el: t.el, x: 0, y: -0.09, w: 1, h: 1.4, d: 0.075, edge: "#d3d9e5" };
+          })(),
           { f: base, b: base, x: 0, y: 0.68, w: 1.1, h: 0.18, d: 0.3, edge: "#bda77c" },
         ],
       };
     }
     function paw(kind) {
       var f = artPaw(kind, false), edge = kind === "bw" ? "#bcbcb6" : "#8c0b16";
-      return { W: 1, H: 1, paw: kind, slabs: [{ f: f, b: artPaw(kind, true), e: tint(f, edge), x: 0, y: 0, w: 1, h: 1, d: 0.075, edge: edge }] };
+      var t = kind === "bw" ? tones(f, "#bcbcb6", "#8a8a85", "#e8e8e3") : tones(f, "#8c0b16", "#5c0610", "#c4202c");
+      return { W: 1, H: PH / PW, paw: kind, slabs: [{ f: f, b: artPaw(kind, true), e: t.e, ed: t.ed, el: t.el, x: 0, y: 0, w: 1, h: PH / PW, d: 0.085, edge: edge }] };
     }
     return {
       ig: social("ig"), fb: social("fb"),
-      wifi: (function () { var f = artWifi(false); return { W: 0.68, H: 1, slabs: [{ f: f, b: artWifi(true), e: tint(f, "#c9ccd3"), x: 0, y: 0, w: 0.68, h: 1, d: 0.16, edge: "#c9ccd3" }] }; })(),
+      wifi: (function () { var f = artWifi(false), t = tones(f, "#c9ccd3", "#989ea9", "#f0f2f6"); return { W: 0.68, H: 1, slabs: [{ f: f, b: artWifi(true), e: t.e, ed: t.ed, el: t.el, x: 0, y: 0, w: 0.68, h: 1, d: 0.16, edge: "#c9ccd3" }] }; })(),
       pawbw: paw("bw"), pawred: paw("red"),
     };
   }
@@ -258,13 +294,14 @@
   // ====================================================================
   //  ২. গল্পের সংজ্ঞা
   // ====================================================================
-  // ওপরের ৫টা কার্ড (dx, dy = স্লটের প্রস্থের অনুপাতে, hs = উচ্চতা, w = ঘোরার গতি, ph = শুরুর কোণ)
+  // ওপরের ৫টা কার্ড, সব এক লাইনে: Facebook, Instagram, WiFi, Instagram, Facebook
+  // (dx = লাইনের প্রস্থের অনুপাতে বাম-ডান অবস্থান, dy = ওঠানামা ছাড়া উচ্চতার তফাত, hs = উচ্চতা, w = ঘোরার গতি, ph = শুরুর কোণ)
   var HERO_ITEMS = [
-    { t: "ig", dx: -0.20, dy: 0.02, hs: 0.64, w: 0.21, ph: 0.0, roll: -0.05 },
-    { t: "fb", dx: 0.15, dy: -0.07, hs: 0.56, w: -0.17, ph: 1.9, roll: 0.05 },
-    { t: "wifi", dx: 0.34, dy: 0.22, hs: 0.36, w: 0.25, ph: 3.4, roll: -0.04 },
-    { t: "ig", dx: -0.37, dy: -0.25, hs: 0.30, w: -0.15, ph: 2.6, roll: 0.07 },
-    { t: "fb", dx: -0.04, dy: 0.31, hs: 0.30, w: 0.23, ph: 4.5, roll: -0.08 },
+    { t: "fb", dx: -0.4, dy: 0, hs: 0.265, w: 0.24, ph: 0.0, roll: 0 },
+    { t: "ig", dx: -0.2, dy: 0, hs: 0.265, w: -0.2, ph: 1.4, roll: 0 },
+    { t: "wifi", dx: 0, dy: 0, hs: 0.285, w: 0.22, ph: 2.8, roll: 0 },
+    { t: "ig", dx: 0.2, dy: 0, hs: 0.265, w: -0.2, ph: 4.2, roll: 0 },
+    { t: "fb", dx: 0.4, dy: 0, hs: 0.265, w: 0.24, ph: 5.6, roll: 0 },
   ];
   // নিচের ৪টা পাও-ট্যাগ (স্লটগুলো #paw-stage-এর ভেতরে)
   var PAW_ITEMS = [
@@ -273,7 +310,7 @@
     { t: "pawbw", w: -0.4, ph: 2.4, roll: 0.06 },
     { t: "pawred", w: 0.5, ph: 3.5, roll: -0.07 },
   ];
-  var PAW_OUTER = { pawbw: [245, 245, 242], pawred: [217, 34, 46] };
+  var PAW_OUTER = { pawbw: [238, 238, 233], pawred: [200, 26, 40] };
   var CAPTIONS = [
     { a: 0.34, b: 0.62, text: "Every tap starts as a spark." },
     { a: 0.68, b: 0.96, text: "Then it flows through everything." },
@@ -393,23 +430,32 @@
         ax: rnd(), ay: rnd(), vx: (rnd() - 0.35) * 0.9, vy: (rnd() - 0.5) * 0.5,
         sp: 0.5 + rnd() * 1.1, ph: rnd() * TAU, sz: 0.8 + rnd() * 1.5, zd: zd,
         dx: Math.cos(ang), dy: Math.sin(ang), sw: (rnd() - 0.5) * 2,
-        // শান্ত ব্যাকগ্রাউন্ডের রং: বেশিরভাগ উষ্ণ-সাদা, কিছু নীলচে, মাঝে মাঝে কমলা
-        ac: warm < 0.68 ? [255, 238, 214] : warm < 0.88 ? [150, 190, 255] : [255, 150, 70],
-        ci: warm < 0.68 ? 0 : warm < 0.88 ? 1 : 2,
+        // কণার রং: অর্ধেক সাদা (লাইটে গাঢ় নীল), বাকিটা আকাশী ও নীল
+        ci: warm < 0.5 ? 0 : warm < 0.8 ? 1 : 2,
         gl: i % 11 === 0,   // প্রতি ১১টার একটা নরম আলোর ঝলক পায় (সংযত)
         al: 0.18 + zd * 0.5,
       });
     }
 
-    // ---- আগে থেকে বানানো রঙ (প্রতি ফ্রেমে স্ট্রিং বানানোর খরচ বাঁচাতে) ----
-    var ACOL = [[255, 238, 214], [150, 190, 255], [255, 150, 70]];
-    var STEADY = ACOL.map(function (c) {
-      var a = [];
-      for (var q = 0; q < 20; q++) a.push("rgba(" + c[0] + "," + c[1] + "," + c[2] + "," + ((q + 0.5) / 20).toFixed(3) + ")");
-      return a;
-    });
-    // নরম আলোর ঝলকের ছোট ছবি (radial gradient একবারই আঁকা)
-    var GLOW = ACOL.map(function (c) {
+    // ---- কণার রঙ: শুধু নীল, আকাশী ও সাদা ----
+    // ডার্ক মোডে সাদা; লাইট মোডে সাদা মিশে যায় বলে তার বদলে গাঢ় নীল।
+    var PALS = {
+      dark: [[255, 255, 255], [135, 200, 255], [50, 120, 255]],
+      light: [[18, 44, 112], [0, 132, 232], [21, 87, 255]],
+    };
+    var PAL = PALS.dark, SPR = [], GLOW = [], isLight = false;
+    // গোল কণার ছবি: মাঝখানে ঠাসা গোল বিন্দু, চারপাশে নরম গ্লো (একবারই আঁকা)
+    function makeSprite(c) {
+      var s = mk(32, 32), g = s.getContext("2d"), rgb = c[0] + "," + c[1] + "," + c[2];
+      var rg = g.createRadialGradient(16, 16, 0, 16, 16, 16);
+      rg.addColorStop(0, "rgba(" + rgb + ",1)"); rg.addColorStop(0.26, "rgba(" + rgb + ",1)");
+      rg.addColorStop(0.33, "rgba(" + rgb + ",0.5)"); rg.addColorStop(0.58, "rgba(" + rgb + ",0.15)");
+      rg.addColorStop(1, "rgba(" + rgb + ",0)");
+      g.fillStyle = rg; g.fillRect(0, 0, 32, 32);
+      return s;
+    }
+    // নরম আলোর ঝলকের ছোট ছবি (বড় গ্লো)
+    function makeGlow(c) {
       var s = mk(48, 48), g = s.getContext("2d");
       var rg = g.createRadialGradient(24, 24, 0, 24, 24, 24);
       rg.addColorStop(0, "rgba(" + c[0] + "," + c[1] + "," + c[2] + ",0.95)");
@@ -417,7 +463,14 @@
       rg.addColorStop(1, "rgba(" + c[0] + "," + c[1] + "," + c[2] + ",0)");
       g.fillStyle = rg; g.fillRect(0, 0, 48, 48);
       return s;
-    });
+    }
+    function buildPalette() {
+      isLight = !!(TK.theme && TK.theme.get && TK.theme.get() === "light");
+      PAL = isLight ? PALS.light : PALS.dark;
+      SPR = PAL.map(makeSprite); GLOW = PAL.map(makeGlow);
+    }
+    buildPalette();
+    document.addEventListener("tk-theme", buildPalette);
     var glN = 0, glX = new Float32Array(N), glY = new Float32Array(N), glA = new Float32Array(N), glC = new Uint8Array(N), glS = new Float32Array(N);
 
     // ---- DOM: পিন, ক্যানভাস, ক্যাপশন ----
@@ -516,9 +569,9 @@
       c2.globalAlpha = 1;
     }
 
-    function drawSide(c2, sl, th, S, D) {
+    function drawSide(c2, sl, th, S, D, alpha) {
       var sn = Math.sin(th);
-      if (Math.abs(sn) < 0.02) return;
+      if (Math.abs(sn) < 0.02 || alpha <= 0.01) return;
       var cs = Math.cos(th), xe = sl.x + (sn > 0 ? -1 : 1) * sl.w / 2;
       var yt = sl.y - sl.h / 2, yb = sl.y + sl.h / 2, z1 = -sl.d / 2, z2 = sl.d / 2;
       function pt(x, y, z) {
@@ -527,8 +580,10 @@
       }
       var a = pt(xe, yt, z1), b = pt(xe, yt, z2), c = pt(xe, yb, z2), d = pt(xe, yb, z1);
       c2.beginPath(); c2.moveTo(a[0], a[1]); c2.lineTo(b[0], b[1]); c2.lineTo(c[0], c[1]); c2.lineTo(d[0], d[1]); c2.closePath();
+      c2.globalAlpha = alpha;
       c2.fillStyle = sl.edge; c2.fill();
       c2.lineWidth = 1; c2.strokeStyle = "rgba(255,255,255,0.35)"; c2.stroke();
+      c2.globalAlpha = 1;
     }
 
     // একটা বস্তু অফস্ক্রিন ক্যানভাসে এঁকে, আলো-ছায়া মিশিয়ে মূল ক্যানভাসে বসায়
@@ -548,11 +603,19 @@
       for (var s = 0; s < def.slabs.length; s++) {
         var sl = def.slabs[s];
         var zf = front ? -sl.d / 2 : sl.d / 2;
-        if (intact) {
-          if (sl.e) {
-            // বাঁকা আকারের (পাও, WiFi) পুরুত্ব: আকৃতির ছায়া-রঙা কয়েকটা স্তর পেছন থেকে সামনে সাজানো
-            for (var L = 0; L < 4; L++) drawFace(c2, sl, def, th, S, D, sl.e, front, lerp(-zf, zf, L / 4), 10, 1, 0, o.id);
-          } else drawSide(c2, sl, th, S, D);
+        if (sl.e) {
+          // পুরুত্ব: আকৃতির ছায়া-রঙা স্তর পেছন থেকে সামনে সাজানো (পেছনে গাঢ়, সামনের কিনারা হালকা)।
+          // স্তরের সংখ্যা ধারের আসল চওড়ায় (পিক্সেলে) ঠিক হয়, তাই কোনো ফাঁক থাকে না।
+          // কণা হয়ে ভাঙার সময়ও পুরুত্ব থাকে: তখন মোটা টাইলে ভেঙে ধীরে মিলায়।
+          var nL = clamp(Math.ceil(Math.abs(Math.sin(th)) * sl.d * S / 1.3), 2, lowPower ? 6 : 14);
+          var ecols = intact ? Math.max(6, Math.round(STRIPS / 3)) : Math.max(2, Math.round(GX * sl.w / def.W / 3));
+          var erows = intact ? 1 : Math.max(2, Math.round(GY * sl.h / def.H / 3));
+          for (var L = 0; L < nL; L++) {
+            var fr = L / nL, eimg = fr < 0.4 ? sl.ed : fr < 0.85 ? sl.e : sl.el;
+            drawFace(c2, sl, def, th, S, D, eimg, front, lerp(-zf, zf, fr), ecols, erows, dis, o.id);
+          }
+        } else {
+          drawSide(c2, sl, th, S, D, 1 - sstep(range(dis, 0.0, 0.55)));
         }
         var cols = intact ? STRIPS : Math.max(2, Math.round(GX * sl.w / def.W));
         var rows = intact ? 1 : Math.max(1, Math.round(GY * sl.h / def.H));
@@ -562,6 +625,10 @@
       c2.globalCompositeOperation = "source-atop";
       var shade = (1 - absCos) * 0.42;
       if (shade > 0.01) { c2.fillStyle = "rgba(6,9,16," + shade.toFixed(3) + ")"; c2.fillRect(-Wb / 2, -Hb / 2, Wb, Hb); }
+      // ওপরে হালকা আলো, নিচে হালকা ছায়া: সমতল ছবির বদলে মোটা বস্তুর মতো লাগে
+      var vg = c2.createLinearGradient(0, -S * 0.8, 0, S * 0.8);
+      vg.addColorStop(0, "rgba(255,255,255,0.10)"); vg.addColorStop(0.5, "rgba(255,255,255,0)"); vg.addColorStop(1, "rgba(0,0,0,0.14)");
+      c2.fillStyle = vg; c2.fillRect(-Wb / 2, -Hb / 2, Wb, Hb);
       var gx = Math.sin(th * 1.0 + o.it.ph) * 0.55;
       var lg = c2.createLinearGradient(-S * 0.75 + gx * S, -S * 0.9, S * 0.75 + gx * S, S * 0.9);
       lg.addColorStop(0, "rgba(255,255,255,0)"); lg.addColorStop(0.44, "rgba(255,255,255,0)");
@@ -649,11 +716,11 @@
         pf = clamp((STICK - (fr.top + lag)) / spanF, 0, 1);
         approach = sstep(range(H - (fr.top + lag), 0, H * 0.9));
         G = 0.25 * approach + 0.75 * range(pf, 0.0, 0.55);
-        reveal = sstep(range(pf, 0.5, 0.78));
-        rel = sstep(range(H - (fr.bottom + lag), H * 0.12, H * 0.9));
+        reveal = sstep(range(pf, 0.45, 0.7));
+        // নিচে স্ক্রল করলে ট্যাগগুলো কণা হয়ে ভেঙে ছড়িয়ে পড়ে (আটকে থাকা অবস্থাতেই শুরু)
+        rel = Math.max(range(pf, 0.8, 1.0), sstep(range(H - (fr.bottom + lag), H * 0.12, H * 0.9)));
       }
-      var hide = reveal * (1 - rel);
-      var Geff = G * (1 - rel);
+      var Geff = G;
 
       // ---- লেখা ও ক্যাপশনের স্বচ্ছতা (শুধু বদলালে লিখি) ----
       var ca = 1 - sstep(range(ph, 0.1, 0.26));
@@ -676,20 +743,22 @@
       ctx.clearRect(0, 0, W, H);
 
       // ---- বস্তুর অবস্থা ----
-      var Uh = sr.width;
+      // লাইনের প্রস্থ: ডেস্কটপে ডান পাশের জায়গার সমান, ফোনে প্রায় পুরো পর্দা (৫টা এক লাইনে ধরানোর জন্য)
+      var Uh = W < 860 ? Math.min(W * 0.96, 600) : sr.width;
+      var lineCx = sr.left + sr.width / 2;
       heroObjs.forEach(function (o) {
         var it = o.it, p = o.pose;
         p.S = it.hs * Uh / o.def.H; p.D = p.S * 6;
-        p.cx = sr.left + (0.5 + it.dx) * sr.width;
-        p.cy = sr.top + sr.height * 0.5 + it.dy * sr.width + Math.sin(time * 0.8 + it.ph) * Uh * 0.014;
-        p.th = it.ph + time * it.w; p.roll = it.roll + Math.sin(time * 0.5 + it.ph) * 0.03;
+        p.cx = lineCx + it.dx * Uh;
+        p.cy = sr.top + sr.height * 0.5 + it.dy * Uh + Math.sin(time * 0.8 + it.ph) * Uh * 0.012;
+        p.th = it.ph + time * it.w; p.roll = it.roll + Math.sin(time * 0.5 + it.ph) * 0.012;
         p.cr = Math.cos(p.roll); p.sr = Math.sin(p.roll);
       });
       if (finOK) {
-        var spin = sstep(range(pf, 0.58, 0.85)) * (1 - rel * 0.0);
+        var spin = sstep(range(pf, 0.52, 0.8));
         pawObjs.forEach(function (o, j) {
           var it = o.it, p = o.pose, r = slotR[j];
-          p.S = r.width * (W < 860 ? 0.95 : 1.05); p.D = p.S * 6;
+          p.S = r.width * (W < 860 ? 1.04 : 1.05); p.D = p.S * 6;
           p.cx = r.left + r.width / 2;
           p.cy = r.top + r.height / 2 + Math.sin(time * 0.9 + it.ph * 2) * r.width * 0.02 * (0.3 + spin);
           o.acc += dt * it.w * spin;
@@ -705,28 +774,33 @@
         var gcx = sr.left + sr.width * 0.5, gcy = sr.top + sr.height * 0.5, gR = Uh * 0.8;
         var rg = ctx.createRadialGradient(gcx, gcy, 0, gcx, gcy, gR);
         var gA = 0.3 * (1 - sstep(range(dis, 0.0, 0.9)));
-        rg.addColorStop(0, "rgba(40,100,255," + gA.toFixed(3) + ")"); rg.addColorStop(0.55, "rgba(255,140,70," + (gA * 0.22).toFixed(3) + ")"); rg.addColorStop(1, "rgba(40,100,255,0)");
+        rg.addColorStop(0, "rgba(40,100,255," + gA.toFixed(3) + ")"); rg.addColorStop(0.55, "rgba(120,190,255," + (gA * 0.22).toFixed(3) + ")"); rg.addColorStop(1, "rgba(40,100,255,0)");
         ctx.fillStyle = rg; ctx.fillRect(gcx - gR, gcy - gR, gR * 2, gR * 2);
 
         var order = heroObjs.slice().sort(function (x, y) { return x.it.hs - y.it.hs; });
         order.forEach(function (o) { drawFloorShadow(o.pose, o.def, 1 - dis / 0.6 > 0 ? 1 - dis / 0.6 : 0); });
         order.forEach(function (o) {
-          var far = 0.72 + 0.28 * clamp((o.it.hs - 0.3) / 0.34, 0, 1);
+          var far = 1;
           drawObj(o, dis, far);
         });
       }
 
       // ---- কণা ----
       var Uf = Math.min(W, H);
-      var sizeBase = lowPower ? 1.35 : 1.15;
+      var sizeBase = lowPower ? 1.5 : 1.3;
       var anyParticles = dis > 0.0001;
       if (anyParticles) {
         glN = 0;
-        var lastStyle = "";
         for (var i = 0; i < P.length; i++) {
           var p = P[i];
           var dd = ddOf(dis, dkey(p.xn, p.yn, p.k));
           var gE = Geff > 0 ? sstep(clamp((Geff - p.gth * 0.55) / 0.45, 0, 1)) : 0;
+          // ট্যাগ ভাঙার সময়: যে টাইল আগে মিলায়, তার কণা আগে ছাড়া পায় (টাইলের সূত্রই কণার সূত্র)
+          var hideP = reveal;
+          if (gE > 0 && rel > 0) {
+            var rv = sstep(ddOf(rel, dkey(p.tx / 1 + 0.5, p.ty / (PH / PW) + 0.5, pawObjs[p.pj].id)));
+            gE *= (1 - rv); hideP = reveal * (1 - rv);
+          }
           if (dd <= 0 && gE <= 0) continue;
 
           // শান্ত ব্যাকগ্রাউন্ডের অবস্থান (স্ক্রলের সাথে সামান্য প্যারালাক্স)
@@ -735,16 +809,16 @@
           var x, y, e = sstep(dd);
           if (dd >= 1 && gE <= 0) {
             // শান্ত ভাসমান কণা: দ্রুত পথ (আগে-বানানো রঙ, স্ট্রিং বানানো নেই)
-            var qa = p.al * (1 - hide);
+            var qa = p.al * (1 - hideP);
             if (p.gl) qa *= 0.6 + 0.4 * Math.sin(time * p.sp * 1.7 + p.ph);   // মৃদু ঝিকিমিকি
             if (qa < 0.03) continue;
             var sz0 = sizeBase * p.sz * (0.7 + p.zd * 0.6);
             if (p.gl && glN < glX.length) {
               glX[glN] = axp; glY[glN] = ayp; glA[glN] = qa; glC[glN] = p.ci; glS[glN] = sz0 * 8; glN++;
             }
-            var st = STEADY[p.ci][Math.min(19, (qa * 20) | 0)];
-            if (st !== lastStyle) { ctx.fillStyle = st; lastStyle = st; }
-            ctx.fillRect(axp - sz0 / 2, ayp - sz0 / 2, sz0, sz0);
+            var D0 = sz0 * 3.6;   // গোল বিন্দু + চারপাশের গ্লো
+            ctx.globalAlpha = qa;
+            ctx.drawImage(SPR[p.ci], axp - D0 / 2, ayp - D0 / 2, D0, D0);
             continue;
           }
           if (dd >= 1) { x = axp; y = ayp; }
@@ -754,8 +828,10 @@
             var arc = Math.sin(Math.PI * e) * Uf * 0.09;
             x = lerp(PX, axp, e) + p.dx * arc; y = lerp(PY, ayp, e) + p.dy * arc;
           }
-          var oc = p.oc, ac = p.ac, tc = p.tc;
-          var rr_ = lerp(oc[0], ac[0], e), gg = lerp(oc[1], ac[1], e), bb = lerp(oc[2], ac[2], e);
+          var oc = p.oc, ac = PAL[p.ci], tc = p.tc;
+          // বস্তুর আসল রং খুব তাড়াতাড়ি নীল/আকাশী/সাদায় বদলে যায়
+          var ce = sstep(clamp(dd * 3, 0, 1));
+          var rr_ = lerp(oc[0], ac[0], ce), gg = lerp(oc[1], ac[1], ce), bb = lerp(oc[2], ac[2], ce);
           var al = lerp(0.95, p.al, sstep(dd * 1.6));
           var size = sizeBase * p.sz * (0.7 + p.zd * 0.6);
 
@@ -769,17 +845,27 @@
             al = lerp(al, 0.95, gE);
             size = lerp(size, size * 1.4 + 0.8, gE);
           }
-          al *= (1 - hide);
+          al *= (1 - hideP);
           if (al < 0.02) continue;
-          ctx.fillStyle = "rgba(" + (rr_ | 0) + "," + (gg | 0) + "," + (bb | 0) + "," + al.toFixed(2) + ")";
-          lastStyle = "";
-          ctx.fillRect(x - size / 2, y - size / 2, size, size);
+          if (gE <= 0 && dd >= 0.34) {
+            // রং ঠিক হয়ে গেছে: গ্লো-সহ গোল কণা
+            var D1 = size * 3.6;
+            ctx.globalAlpha = al;
+            ctx.drawImage(SPR[p.ci], x - D1 / 2, y - D1 / 2, D1, D1);
+          } else {
+            ctx.globalAlpha = 1;
+            ctx.fillStyle = "rgba(" + (rr_ | 0) + "," + (gg | 0) + "," + (bb | 0) + "," + al.toFixed(2) + ")";
+            ctx.beginPath(); ctx.arc(x, y, size / 2, 0, TAU); ctx.fill();
+          }
         }
         // নরম আলোর ঝলক: যোগ-মিশ্রণে (glow), আলাদা একবারে আঁকা
+        ctx.globalAlpha = 1;
         if (glN > 0 && !lowPower) {
-          ctx.globalCompositeOperation = "lighter";
+          // গাঢ় ব্যাকগ্রাউন্ডে আলো যোগ হয় (lighter); লাইট মোডে যোগ করলে কিছুই দেখা যেত না, তাই সাধারণ মিশ্রণ
+          ctx.globalCompositeOperation = isLight ? "source-over" : "lighter";
+          var glK = isLight ? 0.45 : 0.8;
           for (var gi = 0; gi < glN; gi++) {
-            ctx.globalAlpha = Math.min(0.55, glA[gi] * 0.8);
+            ctx.globalAlpha = Math.min(0.55, glA[gi] * glK);
             ctx.drawImage(GLOW[glC[gi]], glX[gi] - glS[gi] / 2, glY[gi] - glS[gi] / 2, glS[gi], glS[gi]);
           }
           ctx.globalAlpha = 1;
@@ -789,8 +875,7 @@
 
       // ---- নিচের ৪টা পাও-ট্যাগ (কণা জড়ো হয়ে ঠিক হলে ফুটে ওঠে) ----
       if (finOK && reveal > 0.003) {
-        pawObjs.forEach(function (o) { drawRing(o, reveal); });
-        pawObjs.forEach(function (o) { drawObj(o, 0, reveal); });
+        if (rel < 0.999) pawObjs.forEach(function (o) { drawObj(o, rel, reveal); });
       }
 
       schedule();

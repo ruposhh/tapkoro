@@ -3,6 +3,7 @@
    ১. মাউস নড়লে কাচের ওপর আলোর ঝলক সরে (শুধু মাউস/ট্র্যাকপ্যাড থাকলে)।
    ২. সেকশনগুলো স্ক্রলে ধীরে ফুটে ওঠে (reduced-motion চালু থাকলে ওঠে না, সব আগে থেকেই দেখা যায়)।
    ৩. কম-শক্তির ফোনে html-এ "lite" বসে, ফলে ঝাপসা কাচ বন্ধ হয়ে ফোন হালকা চলে।
+  ৪. FAQ-এর বাক্স নরমভাবে স্লাইড করে খোলে/বন্ধ হয়।
   JS না চললেও সাইট পুরো ঠিকঠাক দেখা যায়।
 */
 (function () {
@@ -61,4 +62,51 @@
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupReveal);
   else setupReveal();
+
+  // ---- ৩. FAQ নরমভাবে স্লাইড করে খোলে ও বন্ধ হয় ----
+  function setupFaq() {
+    var EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
+    document.querySelectorAll(".faq details").forEach(function (d) {
+      var sum = d.querySelector("summary");
+      var body = d.querySelector("p");
+      if (!sum) return;
+      var anim = null;
+
+      function finish() {
+        anim = null;
+        d.style.height = ""; d.style.overflow = "";
+        d.classList.remove("is-closing");
+      }
+
+      sum.addEventListener("click", function (e) {
+        e.preventDefault();
+        if (reduce || !d.animate) { d.open = !d.open; d.classList.toggle("is-open", d.open); return; }
+
+        var wantOpen = !d.open || d.classList.contains("is-closing");
+        var from = d.offsetHeight;
+        if (anim) { anim.cancel(); finish(); }
+        d.style.overflow = "hidden";
+
+        if (wantOpen) {
+          d.open = true;
+          d.classList.add("is-open");
+          var to = d.offsetHeight;
+          anim = d.animate({ height: [from + "px", to + "px"] }, { duration: 460, easing: EASE });
+          if (body) body.animate({ opacity: [0, 1], transform: ["translateY(-8px)", "none"] }, { duration: 460, delay: 60, easing: EASE, fill: "backwards" });
+          anim.onfinish = finish;
+          anim.oncancel = function () { anim = null; };
+        } else {
+          d.classList.remove("is-open");
+          d.classList.add("is-closing");
+          var closed = sum.offsetHeight + (d.offsetHeight - d.clientHeight);
+          anim = d.animate({ height: [from + "px", closed + "px"] }, { duration: 380, easing: EASE });
+          if (body) body.animate({ opacity: [1, 0] }, { duration: 220, easing: "ease-out", fill: "forwards" });
+          anim.onfinish = function () { d.open = false; finish(); };
+          anim.oncancel = function () { anim = null; };
+        }
+      });
+    });
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupFaq);
+  else setupFaq();
 })();

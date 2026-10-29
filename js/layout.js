@@ -31,15 +31,22 @@
     return a;
   }
 
-  /* আসল TapKoro লোগো (ডার্ক ব্যাকগ্রাউন্ডের জন্য "Tap" সাদা) */
-  function logoImg(cls) {
+  /* আসল TapKoro লোগো: ডার্কে "Tap" সাদা লোগো, লাইটে আসল লোগো (theme.css একটা লুকিয়ে রাখে) */
+  function oneLogo(cls, file, mode) {
     var img = document.createElement("img");
-    img.className = "brand-logo " + cls;
-    img.src = "assets/brand/logo-on-dark.webp";
-    img.alt = cfg.brandName;
+    img.className = "brand-logo " + cls + " " + mode;
+    img.src = "assets/brand/" + file;
+    img.alt = mode === "logo-dark-only" ? cfg.brandName : "";
+    if (mode !== "logo-dark-only") img.setAttribute("aria-hidden", "true");
     img.width = 1200; img.height = 301;
     img.decoding = "async";
     return img;
+  }
+  function logoImg(cls) {
+    var f = document.createDocumentFragment();
+    f.appendChild(oneLogo(cls, "logo-on-dark.webp", "logo-dark-only"));
+    f.appendChild(oneLogo(cls, "logo.webp", "logo-light-only"));
+    return f;
   }
 
   /* ---------- হেডার ও মোবাইল মেনু ---------- */
@@ -87,6 +94,22 @@
     updateCart();
     TK.cart.onChange(updateCart);
 
+    var themeBtn = el("button", "theme-toggle");
+    themeBtn.type = "button";
+    themeBtn.innerHTML =
+      '<svg class="ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M4.5 4.5l1.4 1.4M18.1 18.1l1.4 1.4M2.5 12h2M19.5 12h2M4.5 19.5l1.4-1.4M18.1 5.9l1.4-1.4"/></svg>' +
+      '<svg class="ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5z"/></svg>';
+    function syncTheme() {
+      var light = TK.theme && TK.theme.get() === "light";
+      themeBtn.setAttribute("aria-label", light ? "Switch to dark mode" : "Switch to light mode");
+      themeBtn.setAttribute("aria-pressed", String(!!light));
+    }
+    syncTheme();
+    themeBtn.addEventListener("click", function () {
+      if (TK.theme) TK.theme.toggle();
+      syncTheme();
+    });
+
     var burger = el("button", "burger");
     burger.type = "button";
     burger.id = "menu-button";
@@ -98,6 +121,7 @@
     bar.appendChild(brand);
     bar.appendChild(nav);
     bar.appendChild(cta);
+    bar.appendChild(themeBtn);
     bar.appendChild(cartLink);
     bar.appendChild(burger);
     header.appendChild(bar);
