@@ -29,7 +29,15 @@
 }
 .faq summary::before { transform: rotate(90deg); }
 .faq details[open] summary::before, .faq details.is-open summary::before { transform: rotate(0deg); }
-.faq details.is-closing summary::before { transform: rotate(90deg); }
+.faq details.faq-js:not(.is-open) summary::before { transform: rotate(90deg); }
+.faq details.faq-js.is-open summary::before { transform: rotate(0deg); }
+/* নরম খোলা-বন্ধ: উচ্চতা 0fr → 1fr */
+.faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.45s var(--ease); }
+.faq-inner { overflow: hidden; min-height: 0; opacity: 0; transform: translate3d(0, -6px, 0); visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.45s var(--ease), visibility 0s linear 0.45s; }
+.faq details.is-open .faq-body { grid-template-rows: 1fr; }
+.faq details.is-open .faq-inner { opacity: 1; transform: none; visibility: visible; transition: opacity 0.4s ease 0.08s, transform 0.45s var(--ease), visibility 0s; }
+@media (prefers-reduced-motion: reduce) { .faq-body, .faq-inner { transition: none !important; } }
 .faq details p { margin: 0; padding: 0 1.25rem 1.1rem; color: var(--muted); }
 .faq details a { color: var(--blue-soft); }
 
