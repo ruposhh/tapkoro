@@ -135,31 +135,38 @@
     menu.appendChild(link("btn btn-primary mobile-cta", "Shop now", "#products"));
     header.appendChild(menu);
 
+    var closeTimer = 0;
     function setOpen(open, returnFocus) {
-      menu.hidden = !open;
+      clearTimeout(closeTimer);
       burger.setAttribute("aria-expanded", String(open));
       burger.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       document.body.classList.toggle("menu-open", open);
       if (open) {
+        menu.hidden = false;
+        void menu.offsetWidth;            // ব্রাউজারকে আগে বন্ধ-অবস্থা আঁকতে দিই, তাহলে অ্যানিমেশন চলে
+        menu.classList.add("is-open");
         var first = menu.querySelector("a");
-        if (first) first.focus();
-      } else if (returnFocus) {
-        burger.focus();
+        if (first) first.focus({ preventScroll: true });
+      } else {
+        menu.classList.remove("is-open");
+        closeTimer = setTimeout(function () { menu.hidden = true; }, 380);
+        if (returnFocus) burger.focus();
       }
     }
+    function menuIsOpen() { return menu.classList.contains("is-open"); }
 
     burger.addEventListener("click", function () {
-      setOpen(menu.hidden, false);
+      setOpen(!menuIsOpen(), false);
     });
     menu.addEventListener("click", function (e) {
       if (e.target.closest("a")) setOpen(false, false);
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !menu.hidden) setOpen(false, true);
+      if (e.key === "Escape" && menuIsOpen()) setOpen(false, true);
     });
     // বড় স্ক্রিনে গেলে মেনু বন্ধ করে দাও
     window.matchMedia("(min-width: 960px)").addEventListener("change", function (e) {
-      if (e.matches && !menu.hidden) setOpen(false, false);
+      if (e.matches && menuIsOpen()) setOpen(false, false);
     });
 
     return header;

@@ -335,7 +335,7 @@
   function dkey(xn, yn, k) {
     return 0.34 * (1 - xn) + 0.26 * yn + 0.40 * (Math.sin(xn * 11.7 + k * 2.1) * Math.cos(yn * 8.3 + k * 1.3) * 0.5 + 0.5);
   }
-  function ddOf(dis, key) { return clamp((dis * 1.5 - key * 0.9) / 0.3, 0, 1); }
+  function ddOf(dis, key) { return clamp((dis * 1.6 - key * 0.85) / 0.55, 0, 1); }
 
   // ====================================================================
   //  ৩. শুরু
@@ -381,7 +381,7 @@
     var N = lowPower ? 800 : isNarrow ? 1500 : 2600;
     var DPR = Math.min(window.devicePixelRatio || 1, lowPower ? 1 : isNarrow ? 1.5 : 1.75);
     var STRIPS = lowPower ? 22 : isNarrow ? 34 : 52;
-    var GX = lowPower ? 8 : 12, GY = lowPower ? 10 : 16;
+    var GX = lowPower ? 14 : isNarrow ? 22 : 30, GY = lowPower ? 18 : isNarrow ? 28 : 38;
     var FRAME_MS = lowPower ? 33 : 0;
 
     var art = buildArt();
@@ -553,15 +553,18 @@
           if (dw < 0.02) continue;
           var ya = (sl.y + (v0 - 0.5) * sl.h) * S * fm, yb = (sl.y + (v1 - 0.5) * sl.h) * S * fm;
           var dh = yb - ya;
-          var sc = 1, off = 0;
+          var sc = 1, off = 0, offx = 0;
           if (tiles) {
             var xn = ((xa + xb) / 2) / def.W + 0.5, yn = ((sl.y + ((v0 + v1) / 2 - 0.5) * sl.h)) / def.H + 0.5;
             var dd = ddOf(dis, dkey(xn, yn, k));
             if (dd >= 1) continue;
-            sc = 1 - dd * 0.5; off = dd * dd * S * 0.05;
-            c2.globalAlpha = 1 - dd;
+            // বালির মতো ঝুরে পড়া: ছোট টাইল প্রায় একই আকারে থাকে, নরমভাবে মিলায় আর হালকা ভেসে ওঠে
+            var ds = dd * dd * (3 - 2 * dd);
+            sc = 1 - ds * 0.12; off = ds * ds * S * 0.07;
+            offx = (Math.sin(xn * 23.1 + yn * 17.3 + k) * 0.5 + 0.5) * ds * ds * S * 0.06;
+            c2.globalAlpha = 1 - ds;
           }
-          var cx = Xa + dw / 2, cy = ya + dh / 2 - off;
+          var cx = Xa + dw / 2 + offx, cy = ya + dh / 2 - off;
           c2.drawImage(img, u0 * iw, v0 * ih, (u1 - u0) * iw + 0.8, (v1 - v0) * ih + 0.4,
             cx - dw * sc / 2, cy - dh * sc / 2, dw * sc + 0.9, dh * sc + 0.9);
         }
@@ -608,11 +611,16 @@
           // স্তরের সংখ্যা ধারের আসল চওড়ায় (পিক্সেলে) ঠিক হয়, তাই কোনো ফাঁক থাকে না।
           // কণা হয়ে ভাঙার সময়ও পুরুত্ব থাকে: তখন মোটা টাইলে ভেঙে ধীরে মিলায়।
           var nL = clamp(Math.ceil(Math.abs(Math.sin(th)) * sl.d * S / 1.3), 2, lowPower ? 6 : 14);
-          var ecols = intact ? Math.max(6, Math.round(STRIPS / 3)) : Math.max(2, Math.round(GX * sl.w / def.W / 3));
-          var erows = intact ? 1 : Math.max(2, Math.round(GY * sl.h / def.H / 3));
-          for (var L = 0; L < nL; L++) {
-            var fr = L / nL, eimg = fr < 0.4 ? sl.ed : fr < 0.85 ? sl.e : sl.el;
-            drawFace(c2, sl, def, th, S, D, eimg, front, lerp(-zf, zf, fr), ecols, erows, dis, o.id);
+          // ধার/পুরুত্ব টুকরো হয় না (তাহলে বড় চৌকো ব্লক দেখাত): এটা নরমভাবে মিলিয়ে যায়, সামনের মুখ ছোট টাইলে ঝুরে পড়ে
+          var ecols = Math.max(6, Math.round(STRIPS / 3));
+          var ea = 1 - sstep(range(dis, 0.0, 0.4));
+          if (ea > 0.01) {
+            for (var L = 0; L < nL; L++) {
+              var fr = L / nL, eimg = fr < 0.4 ? sl.ed : fr < 0.85 ? sl.e : sl.el;
+              c2.globalAlpha = ea;
+              drawFace(c2, sl, def, th, S, D, eimg, front, lerp(-zf, zf, fr), ecols, 1, 0, o.id);
+            }
+            c2.globalAlpha = 1;
           }
         } else {
           drawSide(c2, sl, th, S, D, 1 - sstep(range(dis, 0.0, 0.55)));

@@ -63,47 +63,30 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", setupReveal);
   else setupReveal();
 
-  // ---- ৩. FAQ নরমভাবে স্লাইড করে খোলে ও বন্ধ হয় ----
+  // ---- ৩. FAQ নরমভাবে খোলে ও বন্ধ হয় ----
+  // পদ্ধতি: উত্তরটা একটা মোড়কে রাখি, মোড়কের উচ্চতা CSS-এ 0 থেকে পুরো পর্যন্ত গড়ায় (grid-template-rows)।
+  // JS দিয়ে উচ্চতা মাপামাপি নেই, তাই কাঁপে না, আর উত্তর কখনো গায়েব হয় না।
   function setupFaq() {
-    var EASE = "cubic-bezier(0.22, 0.61, 0.36, 1)";
     document.querySelectorAll(".faq details").forEach(function (d) {
       var sum = d.querySelector("summary");
       var body = d.querySelector("p");
-      if (!sum) return;
-      var anim = null;
-
-      function finish() {
-        anim = null;
-        d.style.height = ""; d.style.overflow = "";
-        d.classList.remove("is-closing");
-      }
-
+      if (!sum || !body) return;
+      var wrap = document.createElement("div");
+      wrap.className = "faq-body";
+      var inner = document.createElement("div");
+      inner.className = "faq-inner";
+      d.insertBefore(wrap, body);
+      wrap.appendChild(inner);
+      inner.appendChild(body);
+      d.open = true;                       // সবসময় খোলা রাখি, দেখানো/লুকানো CSS করে
+      d.classList.add("faq-js");
+      sum.setAttribute("role", "button");
+      sum.setAttribute("aria-expanded", "false");
       sum.addEventListener("click", function (e) {
         e.preventDefault();
-        if (reduce || !d.animate) { d.open = !d.open; d.classList.toggle("is-open", d.open); return; }
-
-        var wantOpen = !d.open || d.classList.contains("is-closing");
-        var from = d.offsetHeight;
-        if (anim) { anim.cancel(); finish(); }
-        d.style.overflow = "hidden";
-
-        if (wantOpen) {
-          d.open = true;
-          d.classList.add("is-open");
-          var to = d.offsetHeight;
-          anim = d.animate({ height: [from + "px", to + "px"] }, { duration: 460, easing: EASE });
-          if (body) body.animate({ opacity: [0, 1], transform: ["translateY(-8px)", "none"] }, { duration: 460, delay: 60, easing: EASE, fill: "backwards" });
-          anim.onfinish = finish;
-          anim.oncancel = function () { anim = null; };
-        } else {
-          d.classList.remove("is-open");
-          d.classList.add("is-closing");
-          var closed = sum.offsetHeight + (d.offsetHeight - d.clientHeight);
-          anim = d.animate({ height: [from + "px", closed + "px"] }, { duration: 380, easing: EASE });
-          if (body) body.animate({ opacity: [1, 0] }, { duration: 220, easing: "ease-out", fill: "forwards" });
-          anim.onfinish = function () { d.open = false; finish(); };
-          anim.oncancel = function () { anim = null; };
-        }
+        var on = !d.classList.contains("is-open");
+        d.classList.toggle("is-open", on);
+        sum.setAttribute("aria-expanded", String(on));
       });
     });
   }
